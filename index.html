@@ -367,6 +367,20 @@ body.lock{overflow:hidden}
 .addsq:active{transform:translateY(2px);box-shadow:0 1px 0 #C9A21B}
 .ln-tx .w.cus{text-transform:uppercase;letter-spacing:.02em}
 
+/* ---- carrusel de atajos ---- */
+.h2s{margin:14px 0 2px;font-size:20px}
+.rail{position:relative;margin-top:6px}
+.tiles{display:flex;grid-template-columns:none;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2px 2px 4px}
+.tiles::-webkit-scrollbar{display:none}
+.tile{flex:none;scroll-snap-align:start;width:84px;min-height:78px;padding:10px 4px 8px;border-radius:14px;font-size:13px;line-height:1.15;text-align:center}
+.tile span{font-size:27px}
+.rbtn{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:24px;line-height:1;padding:0 0 3px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.rbtn.l{left:-6px}.rbtn.r{right:-6px}
+.rbtn:disabled{opacity:0;pointer-events:none}
+/* buscador un poco más grande */
+.search input{min-height:62px;font-size:19px;padding-left:50px;border-radius:18px}
+.search svg{width:23px;height:23px;left:16px}
+
 </style>
 </head>
 <body>
@@ -380,7 +394,7 @@ body.lock{overflow:hidden}
     <div class="search">
       <label class="sr" for="q">Producto</label>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input id="q" type="search" placeholder="¿Qué buscas? yogur, leche, aceite…" autocomplete="off" enterkeyhint="search">
+      <input id="q" type="search" placeholder="Busca: yogur, leche…" autocomplete="off" enterkeyhint="search">
       <button type="button" class="qclear" id="qclear" hidden aria-label="Limpiar búsqueda">Limpiar <span aria-hidden="true">×</span></button>
     </div>
 
@@ -623,6 +637,12 @@ body.lock{overflow:hidden}
   }
 
   /* ---------- Dibujo: búsqueda ---------- */
+  function railState(){
+    var t = $('tiles'); if(!t) return;
+    var l = document.querySelector('.rbtn.l'), r = document.querySelector('.rbtn.r');
+    var upd = function(){ l.disabled = t.scrollLeft < 4; r.disabled = t.scrollLeft + t.clientWidth >= t.scrollWidth - 4; };
+    t.addEventListener('scroll', upd, {passive:true}); upd();
+  }
   function renderChips(){
     $('chips').innerHTML = CHAINS.map(function(k){
       return '<button type="button" class="chip" data-ch="'+k+'" aria-pressed="'+(!!S.sel[k])+'">'+chainTag(k)+'</button>';
@@ -653,8 +673,8 @@ body.lock{overflow:hidden}
       $('count').textContent = '';
       var h = '';
       if(RECENT.length) h += '<h2 class="h2s">Tus últimas búsquedas</h2><div class="recent">' + RECENT.map(function(t){ return '<button type="button" class="q" data-q="'+esc(t)+'">'+esc(t)+'</button>'; }).join('') + '</div>';
-      h += '<h2 class="h2s">¿Qué te hace falta hoy?</h2><div class="tiles">' + TILES.map(function(t){ return '<button type="button" class="tile" data-q="'+esc(t[1])+'"><span>'+t[0]+'</span>'+esc(t[1])+'</button>'; }).join('') + '</div>';
-      list.innerHTML = h; S.rows = []; return;
+      h += '<h2 class="h2s">¿Qué te hace falta hoy?</h2><div class="rail"><button type="button" class="rbtn l" data-rail="-1" aria-label="Ver anteriores">‹</button><div class="tiles" id="tiles">' + TILES.map(function(t){ return '<button type="button" class="tile" data-q="'+esc(t[1])+'"><span>'+t[0]+'</span>'+esc(t[1])+'</button>'; }).join('') + '</div><button type="button" class="rbtn r" data-rail="1" aria-label="Ver más">›</button></div>';
+      list.innerHTML = h; S.rows = []; railState(); return;
     }
     var rows = baseList();
     if(!rows.length){
@@ -726,7 +746,6 @@ body.lock{overflow:hidden}
     h += '<div class="tot"><div class="tot-r"><span>Cogidos</span><b>'+t.d+' de '+t.n+'</b></div>'
       + '<div class="tot-r"><span>Te falta por coger</span><b>'+nf.format(t.pend)+' €</b></div>'
       + '<div class="tot-r big"><span>Total</span><b>'+nf.format(t.tot)+' €</b></div>'
-      + (t.nop ? '<p class="tot-n">'+t.nop+(t.nop===1?' producto escrito a mano no tiene':' productos escritos a mano no tienen')+' precio y no se suma'+(t.nop===1?'':'n')+'.</p>' : '')
       + '</div></div>';
     h += '<div class="lacts"><button class="btn" type="button" id="lst-share">Compartir lista</button>';
     if(t.d) h += '<button class="btn alt" type="button" id="lst-uncheck">Desmarcar todo (para reutilizar)</button><button class="btn alt" type="button" id="lst-clean">Quitar los ya cogidos ('+t.d+')</button>';
@@ -849,6 +868,7 @@ body.lock{overflow:hidden}
   $('list').addEventListener('click', function(e){
     var t = e.target, c = function(s){ return t.closest ? t.closest(s) : null; }, el;
     if(t.id === 'more'){ S.shown += 24; render(); return; }
+    if((el = c('[data-rail]'))){ var tl = $('tiles'); if(tl) tl.scrollBy({left:(+el.getAttribute('data-rail')) * Math.max(160, tl.clientWidth * 0.75), behavior:'smooth'}); return; }
     if((el = c('[data-q]'))){ S.q = el.getAttribute('data-q'); $('q').value = S.q; saveRecent(S.q); S.shown = 24; render(); window.scrollTo(0,0); return; }
     if((el = c('[data-add]'))){ var it = S.rows[+el.getAttribute('data-add')]; if(it) toggleList(it); return; }
     if((el = c('[data-fav]'))){ var f = S.rows[+el.getAttribute('data-fav')]; if(f) toggleFav(f); return; }
