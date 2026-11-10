@@ -350,7 +350,7 @@ img{max-width:100%}
     }
     var prevAv = S.cp ? avail() : [];
     var wasAll = prevAv.length > 0 && prevAv.every(function(k){ return S.sel[k]; });
-    S.cp = cp; S.live = null; S.geo = null; S.stores = [];
+    S.cp = cp; S.live = null; S.geo = approxGeo(cp); S.stores = [];
     var av = avail(), next = {};
     av.forEach(function(k){ if(wasAll || S.sel[k]) next[k] = true; });
     if(!Object.keys(next).length) av.forEach(function(k){ next[k] = true; });
@@ -500,19 +500,35 @@ img{max-width:100%}
     var x = Math.pow(Math.sin(dl/2),2) + Math.cos(a*p)*Math.cos(c*p)*Math.pow(Math.sin(dn/2),2);
     return 12742*Math.asin(Math.sqrt(x));
   }
-  function geocode(cp){
-    return fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=es&accept-language=es&postalcode='+cp)
-      .then(function(r){ if(!r.ok) throw new Error('geo'); return r.json(); })
-      .then(function(a){ if(!a.length) throw new Error('geo-empty'); return {lat:+a[0].lat, lon:+a[0].lon}; });
+  var PLL = {};
+  '01 42.85 -2.67,02 38.99 -1.86,03 38.35 -0.48,04 36.84 -2.46,05 40.66 -4.70,06 38.88 -6.97,07 39.57 2.65,08 41.39 2.17,09 42.34 -3.70,10 39.47 -6.37,11 36.53 -6.29,12 39.99 -0.04,13 38.99 -3.93,14 37.89 -4.78,15 43.37 -8.40,16 40.07 -2.14,17 41.98 2.82,18 37.18 -3.60,19 40.63 -3.17,20 43.32 -1.98,21 37.26 -6.95,22 42.14 -0.41,23 37.77 -3.79,24 42.60 -5.57,25 41.62 0.62,26 42.47 -2.45,27 43.01 -7.56,28 40.42 -3.70,29 36.72 -4.42,30 37.99 -1.13,31 42.82 -1.64,32 42.34 -7.86,33 43.36 -5.85,34 42.01 -4.53,35 28.12 -15.43,36 42.43 -8.64,37 40.97 -5.66,38 28.47 -16.25,39 43.46 -3.81,40 40.95 -4.12,41 37.39 -5.98,42 41.76 -2.47,43 41.12 1.25,44 40.34 -1.11,45 39.86 -4.02,46 39.47 -0.38,47 41.65 -4.72,48 43.26 -2.93,49 41.50 -5.75,50 41.65 -0.89,51 35.89 -5.32,52 35.29 -2.94'.split(',').forEach(function(s){ var a = s.split(' '); PLL[a[0]] = {lat:+a[1], lon:+a[2]}; });
+  function approxGeo(cp){ var g = PLL[cp.slice(0,2)] || {lat:40.2,lon:-3.7}; return {lat:g.lat, lon:g.lon, approx:true}; }
+  function timed(url,ms){
+    var ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+    var t = setTimeout(function(){ if(ctl) ctl.abort(); }, ms);
+    return fetch(url, ctl ? {signal:ctl.signal} : {}).then(function(r){ clearTimeout(t); if(!r.ok) throw new Error('http '+r.status); return r.json(); }, function(e){ clearTimeout(t); throw e; });
   }
+  function geocode(cp){
+    var base = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=es&accept-language=es&';
+    return timed(base+'postalcode='+cp, 12000).then(function(a){
+      if(a && a.length) return {lat:+a[0].lat, lon:+a[0].lon};
+      return timed(base+'q='+encodeURIComponent(cp+' España'), 12000).then(function(b){
+        if(b && b.length) return {lat:+b[0].lat, lon:+b[0].lon};
+        throw new Error('geo-empty');
+      });
+    }).catch(function(){ return approxGeo(cp); });
+  }
+  var OVP = ['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.private.coffee/api/interpreter'];
   function overpass(lat,lon,rm){
     var nm = 'Mercadona|Lidl|Aldi|Carrefour|Corte Ingl|Supercor|Hipercor|Cash ?Fresh|Alcampo|Eroski|(^|[ ])Spar([ ]|$)|(^|[ ])D[ií]a([ ]|$)';
     var sh = '["shop"~"supermarket|convenience|department_store|general"]';
     var ar = '(around:'+rm+','+lat+','+lon+')';
     var q = '[out:json][timeout:25];(nwr'+sh+'["name"~"'+nm+'",i]'+ar+';nwr'+sh+'["brand"~"'+nm+'",i]'+ar+';);out center tags 400;';
-    return fetch('https://overpass-api.de/api/interpreter?data='+encodeURIComponent(q))
-      .then(function(r){ if(!r.ok) throw new Error('ovp'); return r.json(); })
-      .then(function(j){
+    function attempt(i){
+      if(i >= OVP.length) return Promise.reject(new Error('ovp'));
+      return timed(OVP[i]+'?data='+encodeURIComponent(q), 30000).catch(function(){ return attempt(i+1); });
+    }
+    return attempt(0).then(function(j){
         var seen = {}, out = [];
         (j.elements||[]).forEach(function(e){
           var t = e.tags || {}, c = classify(t);
@@ -569,30 +585,37 @@ img{max-width:100%}
     renderNearest();
   }
   function locate(){
-    var cp = S.cp, r = S.radius, key = 'cc.osm.'+cp+'.'+r;
+    var cp = S.cp, r = S.radius, key = 'cc.osm2.'+cp+'.'+r;
     setMapMsg('Buscando supermercados cerca de '+cp+'…');
     var cached = cget(key);
-    var job = cached ? Promise.resolve(cached) : geocode(cp).then(function(g){
-      return overpass(g.lat,g.lon,r*1000).then(function(st){ var d = {geo:g, stores:st}; cset(key,d); return d; });
-    });
-    return job.then(function(d){
+    var geoP = cached ? Promise.resolve(cached.geo) : geocode(cp);
+    return geoP.then(function(g){
       if(cp !== S.cp || r !== S.radius) return;
-      var prev = avail();
-      var wasAll = prev.every(function(k){ return S.sel[k]; });
-      S.geo = d.geo; S.stores = d.stores;
-      var set = {}; d.stores.forEach(function(s){ set[s.c] = 1; });
-      var live = ORDER.filter(function(k){ return set[k]; });
-      S.live = live.length ? live : null;
-      var av = avail(), next = {};
-      av.forEach(function(k){ if(wasAll || S.sel[k]) next[k] = true; });
-      if(!Object.keys(next).length) av.forEach(function(k){ next[k] = true; });
-      S.sel = next;
-      renderZone(); saveState(); S.tab = null; render(); renderMap();
-      setMapMsg(live.length ? (isFile() ? FILEMSG() : '') : 'OpenStreetMap no tiene supermercados de estas cadenas cerca de este código postal. Muestro la cobertura de ejemplo.');
-    }).catch(function(){
-      if(cp !== S.cp || r !== S.radius) return;
-      S.live = null; renderZone(); render(); renderMap();
-      setMapMsg(isFile() ? FILEMSG() : 'No he podido consultar OpenStreetMap ahora mismo. Muestro la cobertura de ejemplo.');
+      S.geo = g; renderMap();                       /* el mapa se ve ya, aunque falle lo demás */
+      var job = cached ? Promise.resolve(cached.stores) : overpass(g.lat,g.lon,r*1000);
+      return job.then(function(st){
+        if(cp !== S.cp || r !== S.radius) return;
+        if(!cached && !g.approx) cset(key,{geo:g, stores:st});
+        var prev = avail();
+        var wasAll = prev.every(function(k){ return S.sel[k]; });
+        S.stores = st;
+        var set = {}; st.forEach(function(s){ set[s.c] = 1; });
+        var live = ORDER.filter(function(k){ return set[k]; });
+        S.live = live.length ? live : null;
+        var av = avail(), next = {};
+        av.forEach(function(k){ if(wasAll || S.sel[k]) next[k] = true; });
+        if(!Object.keys(next).length) av.forEach(function(k){ next[k] = true; });
+        S.sel = next; S.tab = null;
+        renderZone(); saveState(); render(); renderMap();
+        var msg = '';
+        if(!live.length) msg = 'OpenStreetMap no tiene supermercados de estas cadenas cerca de este código postal. Muestro la cobertura de ejemplo.';
+        else if(g.approx) msg = 'No he podido situar el código postal exacto; el mapa está centrado en la capital de la provincia.';
+        setMapMsg(msg);
+      }, function(){
+        if(cp !== S.cp || r !== S.radius) return;
+        S.live = null; renderZone(); render(); renderMap();
+        setMapMsg('El mapa está cargado, pero los servidores de OpenStreetMap que listan tiendas no responden ahora mismo. Muestro la cobertura de ejemplo; prueba de nuevo en un minuto.');
+      });
     });
   }
 
@@ -653,6 +676,7 @@ img{max-width:100%}
   var st = store.get('cc.type'); if(st==='own'||st==='brand'||st==='all') S.type = st;
   var ss = store.get('cc.sort'); if(ss==='unit'||ss==='total') S.sort = ss;
   $('type').value = S.type; $('sort').value = S.sort; $('q').value = S.q;
+  S.geo = approxGeo(S.cp);
   if(isFile()) setMapMsg(FILEMSG());
   renderZone(); renderQuick(); render(); renderMap(); locate();
 })();
