@@ -15,7 +15,7 @@ Comparador de precios de supermercados con foto. Portada → código postal (o u
 ## Publicarlo con GitHub Pages
 
 1. Crea un repositorio **público** en GitHub.
-2. Sube **los tres ficheros juntos**: `index.html`, `productos.js` y `README.md`.
+2. Sube **todos los ficheros juntos**: `index.html`, `productos.js`, `manifest.webmanifest`, `sw.js`, los cuatro `.png` de iconos y `README.md`.
 3. En **Settings → Pages** elige *Deploy from a branch*, rama `main`, carpeta `/ (root)`.
 4. En uno o dos minutos estará en `https://TU-USUARIO.github.io/NOMBRE-DEL-REPO/`.
 
@@ -30,3 +30,7 @@ Comparador de precios de supermercados con foto. Portada → código postal (o u
 - Datos de precios y fotos: proyecto abierto [EasyCompra](https://github.com/elopositor/easycompra) (licencia MIT), que lee las webs de Mercadona, Dia, Carrefour y Lidl. Revisa los términos de uso de cada cadena antes de un uso comercial: las fotos y los datos son suyos.
 - Mapa y tiendas: © colaboradores de [OpenStreetMap](https://www.openstreetmap.org/copyright), licencia ODbL.
 - Logos: marcas de sus respectivas empresas, usadas solo para identificar cada cadena.
+
+## Instalar como app
+
+Abierta desde `https`, se puede instalar en el móvil y se abre a pantalla completa, sin barra del navegador. En Android: botón «Instalar la app» de la portada o menú del navegador → *Instalar aplicación*. En iPhone (Safari): Compartir → *Añadir a pantalla de inicio*. Guarda una copia para usarla sin conexión.
