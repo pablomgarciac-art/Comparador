@@ -253,6 +253,12 @@ body.lock{overflow:hidden}
 .hdr{display:flex;align-items:center;gap:10px}
 .toast{width:max-content}
 
+.search input{padding-right:104px}
+.search input::-webkit-search-cancel-button,.search input::-webkit-search-decoration{-webkit-appearance:none;appearance:none;display:none}
+.qclear{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;border-radius:999px;background:var(--tag);color:var(--ink);font-weight:700;font-size:14px;min-height:38px;padding:0 14px;display:flex;align-items:center;gap:6px}
+.qclear span{font-size:18px;line-height:1}
+.qclear:active{background:var(--line)}
+
 </style>
 </head>
 <body>
@@ -267,6 +273,7 @@ body.lock{overflow:hidden}
       <label class="sr" for="q">Producto</label>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="¿Qué buscas? yogur, leche, aceite…" autocomplete="off" enterkeyhint="search">
+      <button type="button" class="qclear" id="qclear" hidden aria-label="Limpiar búsqueda">Limpiar <span aria-hidden="true">×</span></button>
     </div>
 
     <div id="filters" hidden>
@@ -531,6 +538,7 @@ body.lock{overflow:hidden}
   }
   function render(){
     var list = $('list'), has = tokens(S.q).length > 0;
+    $('qclear').hidden = !S.q;
     $('filters').hidden = !has;
     if(!DATA){ $('count').textContent = ''; list.innerHTML = '<div class="empty"><b>No se han podido cargar los precios</b>Falta el fichero productos.js junto a index.html.</div>'; return; }
     if(!has){
@@ -723,6 +731,7 @@ body.lock{overflow:hidden}
   });
   $('q').addEventListener('input', function(e){ S.q = e.target.value; S.shown = 24; render(); });
   $('q').addEventListener('change', function(){ saveRecent(S.q); });
+  $('qclear').addEventListener('click', function(){ saveRecent(S.q); S.q = ''; S.shown = 24; $('q').value = ''; render(); window.scrollTo(0,0); $('q').focus(); });
   $('type').addEventListener('change', function(e){ S.type = e.target.value; S.shown = 24; store.set('cc2.type',S.type); render(); });
   $('sort').addEventListener('change', function(e){ S.sort = e.target.value; store.set('cc2.sort',S.sort); render(); });
   $('list').addEventListener('click', function(e){
