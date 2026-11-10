@@ -309,6 +309,38 @@ body.lock{overflow:hidden}
 .paper .badge,.paper .chg{font-family:var(--f-body)}
 .ln-tx .w{font-size:24px}
 
+/* ---- compacto ---- */
+.lst{padding-top:max(8px,env(safe-area-inset-top))}
+.tabs2{margin:8px 0 2px}
+.tabs2 button{min-height:42px}
+.addform{gap:8px;margin:10px 0 4px}
+.addform input{min-height:48px}
+.addbtn{min-height:50px;font-size:17px}
+.paper{margin-top:8px;padding:6px 10px 10px 44px}
+.pg{margin-top:2px}
+.pg-h{font-size:26px;padding:2px 0 0}
+.pg-h .pg-s{font-size:22px}
+.ln{padding:1px 0}
+.box{width:38px;height:38px}
+.ln-tx .w{font-size:22px;line-height:1}
+.sub2{display:flex;align-items:baseline;gap:12px}
+.ln-tx .pz{font-size:19px}
+.altl{border:0;background:none;padding:0;font:500 19px/1 'Caveat','Segoe Print',cursive;color:#3C6FB5;text-decoration:underline;text-underline-offset:3px;min-height:26px}
+.qty2 button{width:30px;height:30px;font-size:18px}
+.qty2 span{min-width:16px}
+.xdel{flex:none;width:30px;height:30px;border:0;background:none;color:#B3362C;font:500 28px/1 'Caveat',cursive;padding:0}
+.tot{margin-top:10px;padding-top:4px}
+.tot-r{font-size:22px;line-height:1.15}
+.lacts{gap:8px;margin-top:14px}
+.lacts .btn{min-height:48px}
+
+.sub2{display:flex;align-items:center;flex-wrap:wrap;gap:2px 10px;margin-top:1px}
+.ln-tx .pz{white-space:nowrap}
+.qty2{gap:1px}
+.qty2 button{width:26px;height:26px;font-size:16px;border-width:1.3px}
+.qty2 span{min-width:14px;font-size:20px}
+.altl{white-space:nowrap}
+
 </style>
 </head>
 <body>
@@ -353,7 +385,7 @@ body.lock{overflow:hidden}
     <div class="mini"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#0B7A47"/><path d="M8 13h5l4.5 17h17l4-12H16" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="37" r="2.8" fill="#fff"/><circle cx="33" cy="37" r="2.8" fill="#fff"/><path d="M21 22l3 3 6-6" fill="none" stroke="#FFD84D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Cestuki</span></div>
   </div></div>
   <div class="lst">
-    <h2>Mi compra</h2>
+    <h2 class="sr">Mi compra</h2>
     <div class="tabs2" role="tablist">
       <button type="button" role="tab" id="t-lista" data-tab="lista">Mi lista<b id="t-lista-n"></b></button>
       <button type="button" role="tab" id="t-fav" data-tab="fav">♥ Favoritos<b id="t-fav-n"></b></button>
@@ -656,14 +688,11 @@ body.lock{overflow:hidden}
         h += '<div class="ln'+(x.done?' done':'')+'" data-i="'+i+'"><div class="ln-main">'
           + '<button type="button" class="box" data-chk="'+i+'" aria-pressed="'+(!!x.done)+'" aria-label="'+(x.done?'Ya cogido':'Por coger')+': '+esc(x.name)+'">'+BOX+'</button>'
           + '<div class="ln-tx"'+(x.c ? ' data-open="'+i+'"' : '')+'><span class="w">'+esc(x.name)+'</span>'
-          + (p != null ? '<span class="pz">'+nf.format(p)+' €'+(x.qty>1 ? ' × '+x.qty : '')+'</span>' : '')
+          + '<span class="sub2">'+(p != null ? '<span class="pz">'+nf.format(p*x.qty)+' €</span>' : '')
+          + '<span class="qty2"><button type="button" data-q="-1" data-i="'+i+'" aria-label="Quitar una unidad">−</button><span>'+x.qty+'</span><button type="button" data-q="1" data-i="'+i+'" aria-label="Añadir una unidad">+</button></span>'
+          + (x.c ? '<button type="button" class="altl" data-alt="'+i+'">alternativas</button>' : '')+'</span>'
           + chgHTML(x) + '</div>'
-          + '<div class="qty2"><button type="button" data-q="-1" data-i="'+i+'" aria-label="Quitar una unidad">−</button><span>'+x.qty+'</span><button type="button" data-q="1" data-i="'+i+'" aria-label="Añadir una unidad">+</button></div></div>';
-        if(S.noteIdx === i) h += '<form class="noteform hand" data-noteform="'+i+'"><input type="text" value="'+esc(x.note||'')+'" placeholder="Nota: sin lactosa, el grande…" aria-label="Nota"><button class="minibtn" type="submit">Guardar</button></form>';
-        else if(x.note) h += '<p class="hnote">'+esc(x.note)+'</p>';
-        h += '<div class="ln-act"><button type="button" data-note="'+i+'">'+(x.note?'editar nota':'nota')+'</button>'
-          + (x.c ? '<button type="button" data-alt="'+i+'">alternativas</button>' : '')
-          + '<button type="button" class="dng" data-rm="'+i+'">borrar</button></div></div>';
+          + '<button type="button" class="xdel" data-rm="'+i+'" aria-label="Borrar: '+esc(x.name)+'">×</button></div></div>';
       });
       h += '</section>';
     });
@@ -706,7 +735,7 @@ body.lock{overflow:hidden}
       lines.push('', (k ? CH[k][0] : 'Otros') + ':');
       LIST.filter(function(x){ return x.c === k; }).forEach(function(x){
         var p = priceOf(x);
-        lines.push((x.done ? '[x] ' : '[ ] ') + (x.qty>1 ? x.qty+' × ' : '') + x.name + (p != null ? ' – ' + nf.format(p*x.qty) + ' €' : '') + (x.note ? ' (' + x.note + ')' : ''));
+        lines.push((x.done ? '[x] ' : '[ ] ') + (x.qty>1 ? x.qty+' × ' : '') + x.name + (p != null ? ' – ' + nf.format(p*x.qty) + ' €' : ''));
       });
     });
     lines.push('', 'Total: ' + nf.format(listTotals().tot) + ' €');
@@ -809,7 +838,6 @@ body.lock{overflow:hidden}
       var i = +el.getAttribute('data-rm'), gone = LIST.splice(i,1)[0]; saveList(); renderList(); syncCards();
       toast('Eliminado','Deshacer',function(){ LIST.splice(Math.min(i,LIST.length),0,gone); saveList(); renderList(); syncCards(); }); return;
     }
-    if((el = c('[data-note]'))){ S.noteIdx = +el.getAttribute('data-note'); renderList(); var ni = document.querySelector('.noteform input'); if(ni) ni.focus(); return; }
     if((el = c('[data-alt]'))){ var z = LIST[+el.getAttribute('data-alt')]; if(z){ S.q = altQuery(z); $('q').value = S.q; S.shown = 24; S.sort = 'unit'; $('sort').value = 'unit'; S.restore = false; render(); show('app', true); toast('Alternativas a «' + z.name + '»'); } return; }
     if((el = c('[data-open]'))){ var o = LIST[+el.getAttribute('data-open')]; if(o && o.c) openSheet(asItem(o)); return; }
     if((el = c('[data-fopen]'))){ var fo = FAV[+el.getAttribute('data-fopen')]; if(fo) openSheet(asItem(fo)); return; }
@@ -832,8 +860,6 @@ body.lock{overflow:hidden}
       var v = $('lst-new').value.trim(); if(!v) return;
       LIST.push({k:'x|'+Date.now(), c:'', name:v, brand:'', photo:'', price:null, ref:null, u:null, url:'', qty:1, done:false, note:''});
       saveList(); S.tab = 'lista'; $('lst-new').value = ''; renderList(); $('lst-new').focus();
-    } else if(f.hasAttribute('data-noteform')){
-      var x = LIST[+f.getAttribute('data-noteform')]; if(x){ x.note = f.querySelector('input').value.trim(); } S.noteIdx = -1; saveList(); renderList();
     }
   });
   document.addEventListener('error', function(e){
