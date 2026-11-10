@@ -298,7 +298,7 @@ details.mapd summary small{font-weight:500;color:var(--muted)}
     get:function(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
     set:function(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   };
-  var S = {screen:'intro', cp:'', label:'', prov:'06', geo:null, radius:5, live:null, stores:[], sel:{}, type:'all', sort:'total', q:'yogur fresa', shown:24, failed:false, busy:false};
+  var S = {screen:'intro', cp:'', label:'', prov:'06', geo:null, radius:5, live:null, stores:[], sel:{}, type:'all', sort:'total', q:'yogur fresa', shown:24, failed:false, busy:false, loading:false, req:0};
   function validCP(cp){ return /^\d{5}$/.test(cp) && !!PROV[cp.slice(0,2)]; }
   function zoneAll(){ return S.live || chainsFor(S.prov); }
   function avail(){ return zoneAll().filter(function(k){ return HAS[k]; }); }
@@ -352,13 +352,13 @@ details.mapd summary small{font-weight:500;color:var(--muted)}
   var NOM = 'https://nominatim.openstreetmap.org/';
   function geocode(cp){
     var base = NOM+'search?format=jsonv2&limit=1&countrycodes=es&accept-language=es&';
-    return timed(base+'postalcode='+cp, 12000).then(function(a){
+    var approx = function(){ var g = PLL[cp.slice(0,2)]; return {lat:g.lat, lon:g.lon, approx:true}; };
+    return timed(base+'postalcode='+cp, 6000).then(function(a){
       if(a && a.length) return {lat:+a[0].lat, lon:+a[0].lon};
-      return timed(base+'q='+encodeURIComponent(cp+' España'), 12000).then(function(b){
-        if(b && b.length) return {lat:+b[0].lat, lon:+b[0].lon};
-        throw new Error('vacío');
-      });
-    }).catch(function(){ var g = PLL[cp.slice(0,2)]; return {lat:g.lat, lon:g.lon, approx:true}; });
+      return timed(base+'q='+encodeURIComponent(cp+' España'), 6000).then(function(b){
+        return (b && b.length) ? {lat:+b[0].lat, lon:+b[0].lon} : approx();
+      }, approx);
+    }, approx);
   }
   var OVP = ['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.private.coffee/api/interpreter'];
   function parseStores(els,lat,lon){
@@ -382,11 +382,8 @@ details.mapd summary small{font-weight:500;color:var(--muted)}
     var sh = '["shop"~"supermarket|convenience|department_store|general"]';
     var ar = '(around:'+rm+','+lat+','+lon+')';
     var q = '[out:json][timeout:25];(nwr'+sh+'["name"~"'+nm+'",i]'+ar+';nwr'+sh+'["brand"~"'+nm+'",i]'+ar+';);out center tags 400;';
-    function attempt(i){
-      if(i >= OVP.length) return Promise.reject(new Error('overpass'));
-      return timed(OVP[i]+'?data='+encodeURIComponent(q), 25000).catch(function(){ return attempt(i+1); });
-    }
-    return attempt(0).then(function(j){ return parseStores((j.elements||[]).map(function(e){ e.id = e.type+e.id; return e; }),lat,lon); });
+    function any(ps){ return new Promise(function(res,rej){ var n = ps.length, f = 0; ps.forEach(function(p){ p.then(res,function(){ if(++f === n) rej(new Error('overpass')); }); }); }); }
+    return any(OVP.map(function(u){ return timed(u+'?data='+encodeURIComponent(q), 12000); })).then(function(j){ return parseStores((j.elements||[]).map(function(e){ e.id = e.type+e.id; return e; }),lat,lon); });
   }
   /* respaldo: buscar cada cadena en Nominatim dentro de un recuadro alrededor (1 petición por segundo) */
   function viaNominatim(lat,lon,rm,progress){
@@ -399,9 +396,10 @@ details.mapd summary small{font-weight:500;color:var(--muted)}
         if(fails === names.length) return Promise.reject(new Error('nominatim'));
         return Promise.resolve(parseStores(all,lat,lon).filter(function(s){ return s.d <= rm/1000 * 1.05; }));
       }
+      if(fails >= 2 && !all.length) return Promise.reject(new Error('nominatim'));
       var n = names[i++];
       if(progress) progress(i, names.length);
-      return timed(NOM+'search?format=jsonv2&limit=10&countrycodes=es&accept-language=es&bounded=1&viewbox='+vb+'&q='+encodeURIComponent(n), 12000).then(function(a){
+      return timed(NOM+'search?format=jsonv2&limit=10&countrycodes=es&accept-language=es&bounded=1&viewbox='+vb+'&q='+encodeURIComponent(n), 5000).then(function(a){
         (a||[]).forEach(function(x){
           var c = classify({name:(x.name||'')+' '+String(x.display_name||'').split(',')[0]});
           if(c) all.push({id:'n'+x.place_id, c:c, lat:x.lat, lon:x.lon, nm:x.name, tags:{}});
@@ -419,7 +417,7 @@ details.mapd summary small{font-weight:500;color:var(--muted)}
   /* ---------- Arranque de una zona ---------- */
   function setBusy(b,txt){
     S.busy = b;
-    $('cp-ok').disabled = b; $('locbtn').disabled = b; $('go').disabled = false;
+    $('cp-ok').disabled = b; $('locbtn').disabled = b;
     if(txt != null) $('cp-msg').textContent = txt;
     $('cp-msg').className = 'msg';
   }
@@ -430,42 +428,41 @@ details.mapd summary small{font-weight:500;color:var(--muted)}
     if(!Object.keys(next).length) av.forEach(function(k){ next[k] = true; });
     S.sel = next;
   }
-  function enter(){
-    show('app', true);
-    chosenDefaults(); renderAll();
+  function enter(){ show('app', true); chosenDefaults(); renderAll(); }
+  function applyStores(st){
+    S.stores = st; S.failed = false;
+    var set = {}; st.forEach(function(s){ set[s.c] = 1; });
+    var live = ORDER.filter(function(k){ return set[k]; });
+    S.live = live.length ? live : null;
   }
-  function loadZone(geo,label,prov,cpSave){
-    S.geo = geo; S.label = label; S.prov = prov; S.live = null; S.stores = []; S.failed = false;
-    if(cpSave) store.set('cc2.cp', cpSave);
-    setBusy(true,'Buscando súpers cerca de ti…');
-    return getStores(geo,S.radius,function(i,n){ $('cp-msg').textContent = 'Buscando súpers cerca de ti… ('+i+'/'+n+')'; }).then(function(st){
-      S.stores = st;
-      var set = {}; st.forEach(function(s){ set[s.c] = 1; });
-      var live = ORDER.filter(function(k){ return set[k]; });
-      S.live = live.length ? live : null;
-      S.failed = false;
-    }, function(e){ S.failed = true; S.diag = String(e && e.message || e); })
-    .then(function(){ setBusy(false,''); enter(); });
+  /* entra ya en la app con las cadenas de la provincia; las tiendas cercanas llegan después */
+  function loadZone(geo,label,prov,cpToGeocode){
+    var tok = ++S.req;
+    S.geo = geo; S.label = label; S.prov = prov; S.live = null; S.stores = []; S.failed = false; S.loading = true;
+    setBusy(false,'');
+    enter();
+    var p = cpToGeocode ? geocode(cpToGeocode).then(function(g){ if(tok === S.req){ S.geo = g; renderMap(); } return g; }) : Promise.resolve(geo);
+    return p.then(function(g){
+      return getStores(g,S.radius).then(function(st){ if(tok === S.req) applyStores(st); }, function(e){ if(tok === S.req){ S.failed = true; S.diag = String(e && e.message || e); } });
+    }).then(function(){ if(tok === S.req){ S.loading = false; chosenDefaults(); renderAll(); } });
   }
   function startCP(cp){
     if(!validCP(cp)){ $('cp-msg').className = 'msg err'; $('cp-msg').textContent = 'Ese código postal no me suena. Escribe 5 cifras, por ejemplo 06001.'; return; }
-    setBusy(true,'Situando tu código postal…');
-    geocode(cp).then(function(g){
-      S.cp = cp; S.approx = !!g.approx;
-      loadZone(g, cp + ' · ' + PROV[cp.slice(0,2)], cp.slice(0,2), cp);
-    });
+    var pr = cp.slice(0,2), c = PLL[pr];
+    S.cp = cp; store.set('cc2.cp', cp);
+    loadZone({lat:c.lat, lon:c.lon, approx:true}, cp + ' · ' + PROV[pr], pr, cp);
   }
   function startGeo(){
     if(!navigator.geolocation){ $('cp-msg').className = 'msg err'; $('cp-msg').textContent = 'Tu navegador no da la ubicación. Escribe tu código postal.'; return; }
-    setBusy(true,'Pidiendo tu ubicación…');
+    setBusy(true,'Pidiendo tu ubicación… acepta el permiso del navegador.');
     navigator.geolocation.getCurrentPosition(function(p){
       var g = {lat:p.coords.latitude, lon:p.coords.longitude}, prov = nearestProv(g.lat,g.lon);
       S.cp = '';
+      loadZone(g, 'Tu ubicación · ' + PROV[prov], prov, null);
       timed(NOM+'reverse?format=jsonv2&zoom=14&accept-language=es&lat='+g.lat+'&lon='+g.lon, 8000).then(function(r){
-        var a = (r && r.address) || {}, pc = a.postcode, town = a.city || a.town || a.village || a.municipality || PROV[prov];
-        if(pc && /^\d{5}$/.test(pc) && PROV[pc.slice(0,2)]) prov = pc.slice(0,2);
-        return (pc ? pc + ' · ' : '') + town;
-      }, function(){ return 'Tu ubicación · ' + PROV[prov]; }).then(function(label){ loadZone(g,label,prov,''); });
+        var a = (r && r.address) || {}, pc = a.postcode, town = a.city || a.town || a.village || a.municipality;
+        if(town){ S.label = (pc ? pc + ' · ' : '') + town; $('where').textContent = S.label; }
+      }, function(){});
     }, function(){
       setBusy(false,'');
       $('cp-msg').className = 'msg err';
@@ -518,11 +515,14 @@ details.mapd summary small{font-weight:500;color:var(--muted)}
     var nop = all.filter(function(k){ return !HAS[k]; }).map(function(k){ return CH[k][0]; });
     var absent = Object.keys(HAS).filter(function(k){ return all.indexOf(k) < 0; }).map(function(k){ return CH[k][0]; });
     var t = [];
-    if(nop.length) t.push('También tienes ' + nop.join(', ') + ' cerca, pero aún sin precios.');
+    if(nop.length && S.live) t.push('También tienes ' + nop.join(', ') + ' cerca, pero aún sin precios.');
     if(absent.length && S.live) t.push('Sin ' + absent.join(', ') + ' a menos de ' + S.radius + ' km.');
     $('nearnote').textContent = t.join(' ');
     var n = $('notice');
-    if(S.failed){
+    $('retry').hidden = !!S.loading;
+    if(S.loading){
+      n.hidden = false; $('notice-t').textContent = 'Buscando súpers cerca de ti… mientras tanto, te enseño las cadenas de tu provincia.';
+    } else if(S.failed){
       n.hidden = false;
       $('notice-t').textContent = 'No he podido consultar las tiendas de tu zona ahora mismo. Te enseño las cadenas de tu provincia.';
     } else if(!S.live){
@@ -607,25 +607,13 @@ details.mapd summary small{font-weight:500;color:var(--muted)}
   $('cp-form').addEventListener('submit', function(e){ e.preventDefault(); if(!S.busy) startCP($('cp').value.trim()); });
   $('locbtn').addEventListener('click', function(){ if(!S.busy) startGeo(); });
   $('change').addEventListener('click', function(){ show('cp', true); });
-  $('retry').addEventListener('click', function(){
-    $('retry').disabled = true;
-    S.live = null;
-    getStores(S.geo,S.radius).then(function(st){
-      S.stores = st; S.failed = false;
-      var set = {}; st.forEach(function(s){ set[s.c] = 1; });
-      var live = ORDER.filter(function(k){ return set[k]; });
-      S.live = live.length ? live : null;
-    }, function(){ S.failed = true; }).then(function(){ $('retry').disabled = false; chosenDefaults(); renderAll(); });
-  });
-  $('radius').addEventListener('change', function(e){
-    S.radius = +e.target.value;
-    getStores(S.geo,S.radius).then(function(st){
-      S.stores = st; S.failed = false;
-      var set = {}; st.forEach(function(s){ set[s.c] = 1; });
-      var live = ORDER.filter(function(k){ return set[k]; });
-      S.live = live.length ? live : null;
-    }, function(){ S.failed = true; }).then(function(){ chosenDefaults(); renderAll(); });
-  });
+  function refetch(){
+    var tok = ++S.req; S.loading = true; S.live = null; renderChips();
+    getStores(S.geo,S.radius).then(function(st){ if(tok === S.req) applyStores(st); }, function(){ if(tok === S.req) S.failed = true; })
+      .then(function(){ if(tok === S.req){ S.loading = false; chosenDefaults(); renderAll(); } });
+  }
+  $('retry').addEventListener('click', refetch);
+  $('radius').addEventListener('change', function(e){ S.radius = +e.target.value; refetch(); });
   $('mapd').addEventListener('toggle', renderMap);
   $('chips').addEventListener('click', function(e){
     var b = e.target.closest ? e.target.closest('button') : null; if(!b) return;
