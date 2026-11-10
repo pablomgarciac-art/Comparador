@@ -408,14 +408,74 @@ body.lock{overflow:hidden}
 .tile:active{transform:scale(.96);background:var(--tb)}
 .tile .ti{display:block;font-size:0;line-height:0}
 .tile svg{width:46px;height:46px;display:block;filter:drop-shadow(0 2px 2px rgba(0,0,0,.15))}
+/* v16: 3 tiles, ajustes, portada */
+.tiles{gap:8px}
+.tile{flex:0 0 calc((100% - 16px)/3);width:auto;min-height:84px;padding:9px 2px 8px;font-size:13px;gap:4px;border-radius:16px}
+.tile svg{width:38px;height:38px}
+#s-app .bar .barin{display:flex;align-items:center;justify-content:space-between}
+.gearbtn{flex:none;width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;display:grid;place-items:center}
+.gearbtn:active{background:rgba(255,255,255,.3)}
+.summary{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin:2px 0 8px;padding:10px 14px;border:1px solid var(--line);background:var(--surface);border-radius:14px;font-size:13.5px;color:var(--muted);text-align:left}
+.summary .chev{flex:none;font-weight:700;color:var(--brand)}
+#s-set{min-height:100vh;background:var(--bg)}
+#s-set .lst{padding:6px var(--pad) 40px}
+.seth{font:700 28px var(--f-display);margin:8px 0 6px}
+.setsec{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;margin:12px 0}
+.setsec h3{margin:0 0 8px;font-size:17px}
+.setsec .tiny{margin:0 0 10px;font-size:13.5px;color:var(--muted)}
+.setchips{display:flex;flex-wrap:wrap;gap:8px}
+.alltoggle{margin-top:10px;border:0;background:var(--tag);border-radius:12px;padding:10px 14px;font-weight:700;color:var(--ink);min-height:44px}
+.alltoggle:disabled{color:var(--brand);opacity:1}
+.optrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:none;padding:11px 2px;min-height:52px;border-top:1px solid var(--line);font-size:16px;color:var(--ink)}
+.optrow:first-child{border-top:0}
+.optrow small{display:block;font-size:13px;color:var(--muted);font-weight:400}
+.optrow .rd{flex:none;width:24px;height:24px;border-radius:50%;border:2px solid var(--line);position:relative}
+.optrow[aria-checked=true] .rd{border-color:var(--brand)}
+.optrow[aria-checked=true] .rd:after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--brand)}
+.intro .triad{margin:6px 0 0;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:13px;opacity:.9;text-align:center}
+.intro .inst{display:flex;align-items:center;justify-content:center;gap:8px;margin:14px auto 0;min-height:44px;padding:8px 20px;border-radius:999px;border:1.5px solid rgba(255,255,255,.55);background:rgba(255,255,255,.12);color:#fff;font-weight:600;font-size:15px}
+.intro .inst[hidden]{display:none}
+.intro h1{text-align:center}
+.gearbtn{background:var(--tag,#eef2ee);color:var(--ink,#1B2A22);border:1px solid var(--line)}
+.gearbtn:active{background:var(--line)}
+.setchips{display:grid;grid-template-columns:1fr 1fr}
+.setchips .chip{justify-content:center;width:100%}
 
 </style>
 </head>
 <body>
 
-<div id="s-app">
+<main class="intro" id="s-intro">
+  <i class="blob b1"></i><i class="blob b2"></i>
+  <div class="brandrow"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#0B7A47"/><path d="M8 13h5l4.5 17h17l4-12H16" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="37" r="2.8" fill="#fff"/><circle cx="33" cy="37" r="2.8" fill="#fff"/><path d="M21 22l3 3 6-6" fill="none" stroke="#FFD84D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Cestuki</span></div>
+  <div class="hero">
+    <svg class="art" viewBox="0 0 320 250" aria-hidden="true">
+<ellipse cx="160" cy="236" rx="110" ry="9" fill="rgba(0,0,0,.18)"/>
+<g stroke-linejoin="round" stroke-linecap="round">
+<rect x="92" y="38" width="46" height="66" rx="6" fill="#fff"/><rect x="92" y="38" width="46" height="18" rx="6" fill="#4DA3FF"/><path d="M96 38l10-12h24l8 12z" fill="#CFE5FF"/>
+<path d="M150 74h50l-6 34h-38z" fill="#FF6B8B"/><rect x="146" y="66" width="58" height="10" rx="4" fill="#fff"/><circle cx="175" cy="92" r="7" fill="#fff" opacity=".85"/>
+<circle cx="225" cy="86" r="21" fill="#FF4D3D"/><path d="M225 66c0-8 5-12 10-13" stroke="#2E7D32" stroke-width="5" fill="none"/>
+<path d="M40 38h40l16 106h110l24-76H88" fill="none" stroke="#fff" stroke-width="12"/>
+<path d="M98 112h118l-16 50H114z" fill="#fff" opacity=".18"/>
+<rect x="120" y="108" width="84" height="56" rx="10" fill="#fff" opacity=".96"/>
+<path d="M135 136l14 14 26-30" fill="none" stroke="#0B7A47" stroke-width="10"/>
+<circle cx="124" cy="204" r="16" fill="#FFD84D" stroke="#fff" stroke-width="8"/><circle cx="214" cy="204" r="16" fill="#FFD84D" stroke="#fff" stroke-width="8"/>
+<path d="M104 176h126" stroke="#fff" stroke-width="10" fill="none"/>
+</g></svg>
+    <h1>Compra mejor.<br><em>Paga menos.</em></h1>
+    <p class="triad">Compara · Ahorra · Disfruta</p>
+    <button class="cta" id="enter" type="button">Entrar</button>
+    <button class="inst" id="opts-intro" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h0a1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg> Opciones</button>
+    <button class="inst" id="inst" type="button" hidden>Instalar la app</button>
+    <p class="ioshint" id="ioshint" hidden>Para instalarla en iPhone: toca <b>Compartir</b> y luego <b>Añadir a pantalla de inicio</b>.</p>
+  </div>
+  <div class="chains" id="introchains"><span class="t">Precios reales de</span></div>
+</main>
+
+<div id="s-app" hidden>
   <div class="bar"><div class="barin">
     <div class="mini2 mini"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#0B7A47"/><path d="M8 13h5l4.5 17h17l4-12H16" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="37" r="2.8" fill="#fff"/><circle cx="33" cy="37" r="2.8" fill="#fff"/><path d="M21 22l3 3 6-6" fill="none" stroke="#FFD84D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Cestuki</span></div>
+    <button class="gearbtn" type="button" id="gear" aria-label="Ajustes"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h0a1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 
   </div></div>
   <div class="wrap">
@@ -427,26 +487,26 @@ body.lock{overflow:hidden}
       <button type="button" class="qclear" id="qclear" hidden aria-label="Limpiar búsqueda">Limpiar <span aria-hidden="true">×</span></button>
     </div>
 
-    <div id="filters" hidden>
-      <span class="lbl" id="l-chains">Comparar en</span>
-      <div class="hscroll" id="chips" role="group" aria-labelledby="l-chains" style="padding-top:4px"></div>
-      <div class="opts">
-        <label><span class="lbl">Marcas</span>
-          <select id="type"><option value="all">Todas</option><option value="own">Marca blanca</option><option value="brand">Marcas conocidas</option></select></label>
-        <label><span class="lbl">Ordenar por</span>
-          <select id="sort"><option value="total">Precio del envase</option><option value="unit">Precio por kg / litro</option></select></label>
-      </div>
-    </div>
+    <button type="button" class="summary" id="summary" hidden aria-label="Cambiar ajustes de búsqueda"><span id="sum-t"></span><span class="chev" aria-hidden="true">Ajustes ›</span></button>
 
     <p class="stale" id="stale" hidden></p>
     <p class="count" id="count" aria-live="polite"></p>
     <div id="list"></div>
-    <button class="instbtn" id="inst" type="button" hidden>Instalar la app</button>
-    <p class="ioshint2" id="ioshint" hidden>Para instalarla en iPhone: toca <b>Compartir</b> y luego <b>Añadir a pantalla de inicio</b>.</p>
     <p class="datanote" id="datanote"></p>
     <p class="foot">Precios y fotos tomados de las webs de Mercadona, Dia, Carrefour y Lidl a través del proyecto abierto <a href="https://github.com/elopositor/easycompra" target="_blank" rel="noopener">EasyCompra</a> (licencia MIT). Son precios de la tienda online: pueden cambiar según tu tienda o código postal. Logos y fotos pertenecen a sus empresas y se usan solo para identificar productos.</p>
   </div>
 </div>
+
+<main id="s-set" hidden>
+  <div class="bar"><div class="barin">
+    <button class="back" type="button" id="set-back" style="padding:8px 0">← Volver</button>
+    <div class="mini"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#0B7A47"/><path d="M8 13h5l4.5 17h17l4-12H16" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="37" r="2.8" fill="#fff"/><circle cx="33" cy="37" r="2.8" fill="#fff"/><path d="M21 22l3 3 6-6" fill="none" stroke="#FFD84D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Cestuki</span></div>
+  </div></div>
+  <div class="lst">
+    <h2 class="seth">Ajustes</h2>
+    <div id="set-body"></div>
+  </div>
+</main>
 
 <main id="s-list" hidden>
   <div class="bar"><div class="barin">
@@ -563,31 +623,35 @@ body.lock{overflow:hidden}
     get:function(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
     set:function(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   };
-  var S = {screen:'app', sel:{}, type:'all', sort:'total', q:'', shown:24, rows:[], restore:false, scrollY:0, tab:'lista', noteIdx:-1};
+  var S = {screen:'intro', sel:{}, type:'all', sort:'asc', show:'pack', q:'', shown:24, rows:[], restore:false, scrollY:0, tab:'lista', noteIdx:-1};
   CHAINS.forEach(function(k){ S.sel[k] = true; });
   try{ var sv = JSON.parse(store.get('cc3.sel') || 'null'); if(Array.isArray(sv) && sv.length){ S.sel = {}; sv.forEach(function(k){ if(HAS[k]) S.sel[k] = true; }); if(!Object.keys(S.sel).length) CHAINS.forEach(function(k){ S.sel[k] = true; }); } }catch(e){}
   var st = store.get('cc2.type'); if(st==='own'||st==='brand'||st==='all') S.type = st;
-  var ss = store.get('cc2.sort'); if(ss==='unit'||ss==='total') S.sort = ss;
+  var ss = store.get('cc2.sort'); if(ss==='total') ss = 'asc'; if(ss==='asc'||ss==='desc'||ss==='unit'||ss==='name') S.sort = ss;
+  var sh = store.get('cc3.show'); if(sh==='unit'||sh==='pack') S.show = sh;
 
   /* ---------- Pantallas ---------- */
   function show(name, push){
     if(S.screen === 'app') S.scrollY = window.scrollY;
     S.screen = name;
+    $('s-intro').hidden = name !== 'intro';
     $('s-app').hidden = name !== 'app';
     $('s-list').hidden = name !== 'list';
+    $('s-set').hidden = name !== 'set';
     if(name === 'app' && S.restore){ window.scrollTo(0,S.scrollY || 0); } else window.scrollTo(0,0);
     S.restore = false;
     if(push){ try{ history.pushState({s:name},''); }catch(e){} }
     if(name === 'list') renderList();
+    if(name === 'set') renderSettings();
   }
   window.addEventListener('popstate', function(e){
     var open = !$('sheet').hidden;
     if(open) closeSheet(true);
-    var st = (e.state && e.state.s) || 'app';
+    var st = (e.state && e.state.s) || 'intro';
     if(open && st === S.screen) return;
     S.restore = true; show(st, false);
   });
-  try{ history.replaceState({s:'app'},''); }catch(e){}
+  try{ history.replaceState({s:'intro'},''); }catch(e){}
 
   /* ---------- Mi lista y favoritos ---------- */
   function load(k){ try{ var r = JSON.parse(store.get(k) || '[]'); return Array.isArray(r) ? r.filter(function(x){ return x && x.k && x.name; }) : []; }catch(e){ return []; } }
@@ -690,10 +754,11 @@ body.lock{overflow:hidden}
     var upd = function(){ l.disabled = t.scrollLeft < 4; r.disabled = t.scrollLeft + t.clientWidth >= t.scrollWidth - 4; };
     t.addEventListener('scroll', upd, {passive:true}); upd();
   }
-  function renderChips(){
-    $('chips').innerHTML = CHAINS.map(function(k){
-      return '<button type="button" class="chip" data-ch="'+k+'" aria-pressed="'+(!!S.sel[k])+'">'+chainTag(k)+'</button>';
-    }).join('');
+  var SORTS = {asc:'Precio más bajo primero', desc:'Precio más alto primero', unit:'Precio por kg / litro', name:'Nombre A–Z'};
+  function summaryText(){
+    var on = CHAINS.filter(function(k){ return S.sel[k]; });
+    var s = on.length === CHAINS.length ? 'Todos los súpers' : on.length === 1 ? CH[on[0]][0] : on.map(function(k){ return CH[k][0]; }).join(', ');
+    return s + ' · ' + SORTS[S.sort] + ' · ' + (S.show === 'unit' ? 'por kg / litro' : 'por envase');
   }
   function photoHTML(it,i){
     var on = inList(it), lg = '<span class="chainlogo">'+chainTag(it.c)+'</span>';
@@ -707,14 +772,20 @@ body.lock{overflow:hidden}
     var h = '<article class="card'+(isBest?' best':'')+'" data-i="'+i+'">';
     if(isBest) h += '<div class="strip">Más barato</div>';
     h += photoHTML(it,i) + '<div class="cb"><div class="br">' + (it.brand ? esc(it.brand) : '') + (it.own===true ? '<span class="badge">Marca blanca</span>' : '') + '</div>';
-    h += '<h3>' + esc(it.name) + '</h3><div class="pr"><b>' + nf.format(it.price) + ' €</b>';
-    if(it.ref != null && it.u) h += '<small>' + nf.format(it.ref) + ' ' + UL2[it.u] + '</small>';
+    h += '<h3>' + esc(it.name) + '</h3><div class="pr">';
+    if(S.show === 'unit' && it.ref != null && it.u){
+      h += '<b>' + nf.format(it.ref) + ' ' + UL2[it.u] + '</b><small>' + nf.format(it.price) + ' € envase</small>';
+    } else {
+      h += '<b>' + nf.format(it.price) + ' €</b>';
+      if(it.ref != null && it.u) h += '<small>' + nf.format(it.ref) + ' ' + UL2[it.u] + '</small>';
+      else if(S.show === 'unit') h += '<small>sin precio por kg</small>';
+    }
     return h + '</div></div></article>';
   }
   function render(){
     var list = $('list'), has = tokens(S.q).length > 0;
     $('qclear').hidden = !S.q;
-    $('filters').hidden = !has;
+    $('summary').hidden = !has; if(has) $('sum-t').textContent = summaryText();
     if(!DATA){ $('count').textContent = ''; list.innerHTML = '<div class="empty"><b>No se han podido cargar los precios</b>Falta el fichero productos.js junto a index.html.</div>'; return; }
     if(!has){
       $('count').textContent = '';
@@ -730,10 +801,23 @@ body.lock{overflow:hidden}
       list.innerHTML = '<div class="empty"><b>Aquí no hay nada</b>' + (none ? 'Activa al menos un súper arriba.' : 'Prueba con otra palabra o activa más súpers.') + '</div>';
       return;
     }
-    var unitSort = S.sort === 'unit';
-    var key = function(it){ return unitSort ? (it.ref != null ? it.ref : 1e9) : it.price; };
-    rows.sort(function(a,b){ return key(a) - key(b) || a.price - b.price; });
-    var best = (rows.length > 1 && key(rows[0]) < 1e9) ? rows[0] : null;
+    var cmp = {
+      asc:function(a,b){ return a.price - b.price; },
+      desc:function(a,b){ return b.price - a.price; },
+      unit:function(a,b){ return (a.ref != null ? a.ref : 1e9) - (b.ref != null ? b.ref : 1e9) || a.price - b.price; },
+      name:function(a,b){ return a.name.localeCompare(b.name,'es') || a.price - b.price; }
+    }[S.sort] || function(a,b){ return a.price - b.price; };
+    rows.sort(cmp);
+    var best = null;
+    if(rows.length > 1){
+      var unitMode = S.sort === 'unit';
+      rows.forEach(function(it){
+        var v = unitMode ? it.ref : it.price;
+        if(v == null) return;
+        var bv = best ? (unitMode ? best.ref : best.price) : null;
+        if(!best || v < bv) best = it;
+      });
+    }
     var chains = {}; rows.forEach(function(it){ chains[it.c] = 1; });
     var nc = Object.keys(chains).length;
     $('count').textContent = rows.length + (rows.length===1?' producto':' productos') + ' en ' + nc + (nc===1?' súper':' súpers') + ' para «' + S.q.trim() + '»';
@@ -900,18 +984,9 @@ body.lock{overflow:hidden}
     if(c('#sh-add')){ toggleList(cur); sheetBtns(cur); if(S.screen === 'list') renderList(); }
     else if(c('#sh-fav')){ toggleFav(cur); sheetBtns(cur); if(S.screen === 'list') renderList(); }
   });
-  $('chips').addEventListener('click', function(e){
-    var b = e.target.closest ? e.target.closest('button') : null; if(!b) return;
-    var k = b.getAttribute('data-ch'); if(!k) return;
-    S.sel[k] = !S.sel[k]; S.shown = 24;
-    store.set('cc3.sel', JSON.stringify(Object.keys(S.sel).filter(function(x){ return S.sel[x]; })));
-    renderChips(); render();
-  });
   $('q').addEventListener('input', function(e){ S.q = e.target.value; S.shown = 24; render(); });
   $('q').addEventListener('change', function(){ saveRecent(S.q); });
   $('qclear').addEventListener('click', function(){ saveRecent(S.q); S.q = ''; S.shown = 24; $('q').value = ''; render(); window.scrollTo(0,0); $('q').focus(); });
-  $('type').addEventListener('change', function(e){ S.type = e.target.value; S.shown = 24; store.set('cc2.type',S.type); render(); });
-  $('sort').addEventListener('change', function(e){ S.sort = e.target.value; store.set('cc2.sort',S.sort); render(); });
   $('list').addEventListener('click', function(e){
     var t = e.target, c = function(s){ return t.closest ? t.closest(s) : null; }, el;
     if(t.id === 'more'){ S.shown += 24; render(); return; }
@@ -931,7 +1006,7 @@ body.lock{overflow:hidden}
       var i = +el.getAttribute('data-rm'), gone = LIST.splice(i,1)[0]; saveList(); renderList(); syncCards();
       toast('Eliminado','Deshacer',function(){ LIST.splice(Math.min(i,LIST.length),0,gone); saveList(); renderList(); syncCards(); }); return;
     }
-    if((el = c('[data-alt]'))){ var z = LIST[+el.getAttribute('data-alt')]; if(z){ S.q = altQuery(z); $('q').value = S.q; S.shown = 24; S.sort = 'unit'; $('sort').value = 'unit'; S.restore = false; render(); show('app', true); toast('Alternativas a «' + z.name + '»'); } return; }
+    if((el = c('[data-alt]'))){ var z = LIST[+el.getAttribute('data-alt')]; if(z){ S.q = altQuery(z); $('q').value = S.q; S.shown = 24; S.restore = false; render(); show('app', true); toast('Alternativas a «' + z.name + '»'); } return; }
     if((el = c('[data-open]'))){ var o = LIST[+el.getAttribute('data-open')]; if(o && o.c) openSheet(asItem(o)); return; }
     if((el = c('[data-fopen]'))){ var fo = FAV[+el.getAttribute('data-fopen')]; if(fo) openSheet(asItem(fo)); return; }
     if((el = c('[data-fadd]'))){ var fa = FAV[+el.getAttribute('data-fadd')]; if(fa){ var j = LIST.findIndex(function(l){ return l.k === fa.k; }); if(j > -1){ LIST.splice(j,1); toast('Quitado de tu lista'); } else { LIST.push(Object.assign({}, fa, {qty:1, done:false, note:''})); toast('Añadido a tu lista'); } saveList(); renderList(); syncCards(); } return; }
@@ -960,6 +1035,63 @@ body.lock{overflow:hidden}
     if(t && t.tagName === 'IMG' && t.getAttribute('data-ph')){ var s = document.createElement('span'); s.className = 'nophoto'; s.textContent = 'Sin foto'; t.parentNode.replaceChild(s,t); }
   }, true);
 
+
+  /* ---------- Ajustes ---------- */
+  function optRow(attr,val,cur,title,desc){
+    var on = cur === val;
+    return '<button type="button" class="optrow" '+attr+'="'+val+'" role="radio" aria-checked="'+on+'"><span class="rd"></span><span><b>'+title+'</b>'+(desc ? '<small>'+desc+'</small>' : '')+'</span></button>';
+  }
+  function renderSettings(){
+    var allOn = CHAINS.every(function(k){ return S.sel[k]; });
+    var h = '<section class="setsec"><h3>Supermercados</h3><p class="tiny">Elige dónde quieres ver los productos. Marca uno solo o los que quieras.</p>'
+      + '<div class="setchips">' + CHAINS.map(function(k){ return '<button type="button" class="chip" data-ch="'+k+'" aria-pressed="'+(!!S.sel[k])+'">'+chainTag(k)+'</button>'; }).join('') + '</div>'
+      + '<button type="button" class="alltoggle" data-all="1" '+(allOn?'disabled':'')+'>'+(allOn ? '✓ Todos los súpers' : 'Marcar todos')+'</button></section>';
+    h += '<section class="setsec"><h3>Ordenar por</h3><div role="radiogroup">'
+      + optRow('data-sort','asc',S.sort,'Precio más bajo primero','El más barato arriba')
+      + optRow('data-sort','desc',S.sort,'Precio más alto primero','')
+      + optRow('data-sort','unit',S.sort,'Precio por kilo o litro','Para comparar tamaños distintos')
+      + optRow('data-sort','name',S.sort,'Nombre de la A a la Z','')
+      + '</div></section>';
+    h += '<section class="setsec"><h3>Precio que se ve</h3><div role="radiogroup">'
+      + optRow('data-show','pack',S.show,'Por envase','Lo que pagas por el producto')
+      + optRow('data-show','unit',S.show,'Por kilo o litro','Para comparar de verdad')
+      + '</div></section>';
+    h += '<section class="setsec"><h3>Marcas</h3><div role="radiogroup">'
+      + optRow('data-type','all',S.type,'Todas','')
+      + optRow('data-type','own',S.type,'Solo marca blanca','Hacendado, Dia, Carrefour, Milbona…')
+      + optRow('data-type','brand',S.type,'Solo marcas conocidas','')
+      + '</div></section>';
+    h += '<button type="button" class="btn ghost" id="set-reset" style="margin-top:6px">Restablecer ajustes</button>'
+      + '<button type="button" class="btn" id="set-done" style="margin-top:10px">Listo</button>';
+    $('set-body').innerHTML = h;
+  }
+  function saveSettings(){
+    store.set('cc3.sel', JSON.stringify(Object.keys(S.sel).filter(function(x){ return S.sel[x]; })));
+    store.set('cc2.sort', S.sort); store.set('cc3.show', S.show); store.set('cc2.type', S.type);
+    S.shown = 24; render();
+  }
+  function leaveSettings(){ if(history.state && history.state.s === 'set') history.back(); else { S.restore = true; show('app', false); } }
+  $('s-set').addEventListener('click', function(e){
+    var t = e.target, c = function(s){ return t.closest ? t.closest(s) : null; }, el;
+    if((el = c('[data-ch]'))){
+      var k = el.getAttribute('data-ch'), n = CHAINS.filter(function(x){ return S.sel[x]; }).length;
+      if(S.sel[k] && n === 1){ toast('Deja al menos un súper marcado'); return; }
+      S.sel[k] = !S.sel[k];
+    } else if(c('[data-all]')){ CHAINS.forEach(function(k){ S.sel[k] = true; }); }
+    else if((el = c('[data-sort]'))){ S.sort = el.getAttribute('data-sort'); }
+    else if((el = c('[data-show]'))){ S.show = el.getAttribute('data-show'); }
+    else if((el = c('[data-type]'))){ S.type = el.getAttribute('data-type'); }
+    else if(c('#set-reset')){ CHAINS.forEach(function(k){ S.sel[k] = true; }); S.sort = 'asc'; S.show = 'pack'; S.type = 'all'; toast('Ajustes restablecidos'); }
+    else if(c('#set-done')){ leaveSettings(); return; }
+    else return;
+    saveSettings(); renderSettings();
+  });
+  $('set-back').addEventListener('click', leaveSettings);
+  $('gear').addEventListener('click', function(){ show('set', true); });
+  $('summary').addEventListener('click', function(){ show('set', true); });
+  $('opts-intro').addEventListener('click', function(){ show('set', true); });
+  $('enter').addEventListener('click', function(){ show('app', true); });
+
   /* ---------- Instalar como app ---------- */
   var dip = null;
   window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); dip = e; $('inst').hidden = false; });
@@ -972,9 +1104,10 @@ body.lock{overflow:hidden}
   }
 
   /* ---------- Inicio ---------- */
+  $('introchains').insertAdjacentHTML('beforeend', ['merc','lidl','carr','dia'].map(function(k){ return chainTag(k); }).join(''));
   saveList(); saveFav();
-  $('type').value = S.type; $('sort').value = S.sort; $('q').value = '';
-  renderChips(); render(); updateBadge();
+  $('q').value = '';
+  render(); updateBadge();
   if(DATA){
     var d = new Date(DATA.fecha);
     $('datanote').textContent = 'Precios reales de la web de cada cadena · copia del ' + d.toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});
