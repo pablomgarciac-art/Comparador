@@ -2,7 +2,7 @@
 
 **Compra mejor. Paga menos.** · Compara · Ahorra · Disfruta
 
-Comparador de precios de supermercados con foto y precio por kilo o litro. Pides el código postal, la página busca las tiendas reales de la zona (OpenStreetMap) y compara el mismo producto entre cadenas.
+Comparador de precios de supermercados con foto. Portada → código postal (o ubicación) → te enseña los súpers que tienes cerca (OpenStreetMap) y compara el mismo producto entre cadenas. Pensado primero para el móvil. Por defecto ordena por precio del envase; también se puede ordenar por precio por kilo o litro.
 
 ## Estado
 
