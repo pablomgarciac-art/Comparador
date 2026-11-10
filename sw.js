@@ -1,5 +1,5 @@
 /* Cestuki: funciona sin conexión con la última copia de los precios */
-var V = 'cestuki-v6';
+var V = 'cestuki-v7';
 var SHELL = ['./', 'index.html', 'productos.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', function(e){
   e.waitUntil(caches.open(V).then(function(c){ return c.addAll(SHELL); }).then(function(){ return self.skipWaiting(); }));

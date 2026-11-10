@@ -650,7 +650,7 @@ body.lock{overflow:hidden}
       var items = LIST.filter(function(x){ return x.c === k; });
       items.sort(function(a,b){ return (a.done?1:0) - (b.done?1:0); });
       var sub = items.reduce(function(a,x){ var p = priceOf(x); return a + (p == null ? 0 : p * x.qty); },0);
-      h += '<section class="pg"><div class="pg-h"><span>'+(k ? esc(CH[k][0]) : 'Apuntes')+'</span><span class="pg-s">'+(sub ? nf.format(sub)+' €' : '')+'</span></div>';
+      h += '<section class="pg"><div class="pg-h"><span>'+(k ? esc(CH[k][0]) : 'Productos')+'</span><span class="pg-s">'+(sub ? nf.format(sub)+' €' : '')+'</span></div>';
       items.forEach(function(x){
         var i = LIST.indexOf(x), p = priceOf(x);
         h += '<div class="ln'+(x.done?' done':'')+'" data-i="'+i+'"><div class="ln-main">'
@@ -671,7 +671,7 @@ body.lock{overflow:hidden}
     h += '<div class="tot"><div class="tot-r"><span>Cogidos</span><b>'+t.d+' de '+t.n+'</b></div>'
       + '<div class="tot-r"><span>Te falta por coger</span><b>'+nf.format(t.pend)+' €</b></div>'
       + '<div class="tot-r big"><span>Total</span><b>'+nf.format(t.tot)+' €</b></div>'
-      + (t.nop ? '<p class="tot-n">'+t.nop+(t.nop===1?' apunte a mano no tiene':' apuntes a mano no tienen')+' precio y no se suma'+(t.nop===1?'':'n')+'.</p>' : '')
+      + (t.nop ? '<p class="tot-n">'+t.nop+(t.nop===1?' producto escrito a mano no tiene':' productos escritos a mano no tienen')+' precio y no se suma'+(t.nop===1?'':'n')+'.</p>' : '')
       + '</div></div>';
     h += '<div class="lacts"><button class="btn" type="button" id="lst-share">Compartir lista</button>';
     if(t.d) h += '<button class="btn alt" type="button" id="lst-uncheck">Desmarcar todo (para reutilizar)</button><button class="btn alt" type="button" id="lst-clean">Quitar los ya cogidos ('+t.d+')</button>';
