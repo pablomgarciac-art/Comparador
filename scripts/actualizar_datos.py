@@ -86,6 +86,14 @@ try:
     else: print('ALDI: muy pocos productos, se omite')
 except Exception as e:
     print('ALDI: no se pudo leer (%s); se omite' % e)
+# El Corte Ingles: lo rellena su propio workflow semanal en datos/eci.json
+try:
+    f = Path(out_dir) / 'datos' / 'eci.json'
+    if f.exists():
+        eci = json.loads(f.read_text(encoding='utf-8'))['datos']
+        print('eci productos', len(eci)); rows.extend(eci)
+except Exception as e:
+    print('ECI: no se pudo leer eci.json (%s); se omite' % e)
 rows.sort(key=lambda r:(r[0],r[1]))
 js='window.PRODUCTOS='+json.dumps({'fecha':idx['updated_at'],'datos':rows},ensure_ascii=False,separators=(',',':'))+';\n'
 open(out_dir+'productos.js','w',encoding='utf-8').write(js)
