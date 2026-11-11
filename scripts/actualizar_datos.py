@@ -76,6 +76,16 @@ for key,fn in CHAINS:
     stats[key]=(n,withu)
 for k,(n,w) in stats.items():
     if n<50: sys.exit('Cadena %s con solo %d productos: se aborta sin cambiar nada'%(k,n))
+# ALDI: solo ofertas de la semana; si falla no se rompe lo demas
+try:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import scrape_aldi
+    aldi = scrape_aldi.productos(parse_qty)
+    print('aldi productos', len(aldi))
+    if len(aldi) >= 20: rows.extend(aldi)
+    else: print('ALDI: muy pocos productos, se omite')
+except Exception as e:
+    print('ALDI: no se pudo leer (%s); se omite' % e)
 rows.sort(key=lambda r:(r[0],r[1]))
 js='window.PRODUCTOS='+json.dumps({'fecha':idx['updated_at'],'datos':rows},ensure_ascii=False,separators=(',',':'))+';\n'
 open(out_dir+'productos.js','w',encoding='utf-8').write(js)
