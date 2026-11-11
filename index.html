@@ -449,6 +449,12 @@ body.lock{overflow:hidden}
 .ph{overflow:hidden}
 .ph>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .sh-ph>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:10px}
+/* v19: totales con letra normal */
+.tot-r{font:600 15px/1.3 var(--f-body);color:var(--ink2)}
+.tot-r b{font:700 16px var(--f-body);color:var(--ink)}
+.tot-r.big{margin-top:6px;font:700 17px var(--f-body);color:var(--ink)}
+.tot-r.big b{font:800 26px var(--f-body);text-decoration:none}
+.tot-n{font:500 13px/1.3 var(--f-body)}
 
 </style>
 </head>
@@ -872,7 +878,7 @@ body.lock{overflow:hidden}
       var items = LIST.filter(function(x){ return x.c === k; });
       items.sort(function(a,b){ return (a.done?1:0) - (b.done?1:0); });
       var sub = items.reduce(function(a,x){ var p = priceOf(x); return a + (p == null ? 0 : p * x.qty); },0);
-      h += '<section class="pg"><div class="pg-h'+(k ? '' : ' plain')+'"><span>'+(k ? esc(CH[k][0]) : 'Productos')+'</span><span class="pg-s">'+(sub ? nf.format(sub)+' €' : '')+'</span></div>';
+      h += '<section class="pg"><div class="pg-h plain"><span>'+(k ? esc(CH[k][0]) : 'Productos')+'</span><span class="pg-s">'+(sub ? nf.format(sub)+' €' : '')+'</span></div>';
       items.forEach(function(x){
         var i = LIST.indexOf(x), p = priceOf(x);
         h += '<div class="ln'+(x.done?' done':'')+'" data-i="'+i+'"><div class="ln-main">'
