@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Cestuki · Compra mejor. Paga menos.</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20class=%22mark%22%20viewBox=%220%200%2048%2048%22%20aria-hidden=%22true%22%3E%3Crect%20width=%2248%22%20height=%2248%22%20rx=%2212%22%20fill=%22%230B7A47%22/%3E%3Cpath%20d=%22M8%2013h5l4.5%2017h17l4-12H16%22%20fill=%22none%22%20stroke=%22%23fff%22%20stroke-width=%223.2%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3Ccircle%20cx=%2220%22%20cy=%2237%22%20r=%222.8%22%20fill=%22%23fff%22/%3E%3Ccircle%20cx=%2233%22%20cy=%2237%22%20r=%222.8%22%20fill=%22%23fff%22/%3E%3Cpath%20d=%22M21%2022l3%203%206-6%22%20fill=%22none%22%20stroke=%22%23FFD84D%22%20stroke-width=%223%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3C/svg%3E">
-<meta name="description" content="Cestuki: compra mejor, paga menos. Compara precios reales de Mercadona, Dia, Carrefour, Lidl y Alimerka.">
+<meta name="description" content="Cestuki: compra mejor, paga menos. Compara precios reales de Mercadona, Dia, Carrefour, Lidl, Aldi y Alimerka.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Inter:wght@400;500;600;700&family=Caveat:wght@500;700&display=swap">
 <style>
 
@@ -498,7 +498,7 @@ body.lock{overflow:hidden}
     <p class="count" id="count" aria-live="polite"></p>
     <div id="list"></div>
     <p class="datanote" id="datanote"></p>
-    <p class="foot">Precios y fotos tomados de las webs de Mercadona, Dia, Carrefour, Lidl y Alimerka a través del proyecto abierto <a href="https://github.com/elopositor/easycompra" target="_blank" rel="noopener">EasyCompra</a> (licencia MIT). Son precios de la tienda online: pueden cambiar según tu tienda o código postal. Logos y fotos pertenecen a sus empresas y se usan solo para identificar productos.</p>
+    <p class="foot">Precios y fotos tomados de las webs de Mercadona, Dia, Carrefour, Lidl, Aldi y Alimerka a través del proyecto abierto <a href="https://github.com/elopositor/easycompra" target="_blank" rel="noopener">EasyCompra</a> (licencia MIT). Son precios de la tienda online: pueden cambiar según tu tienda o código postal. Logos y fotos pertenecen a sus empresas y se usan solo para identificar productos.</p>
   </div>
 </div>
 
@@ -573,11 +573,13 @@ body.lock{overflow:hidden}
 
 
 
+  CH.aldi = ['Aldi','#00005F']; LOGOS.aldi = 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20120%2048%22%3E%3Crect%20width%3D%22120%22%20height%3D%2248%22%20rx%3D%228%22%20fill%3D%22%2300005F%22/%3E%3Ctext%20x%3D%2260%22%20y%3D%2233%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-weight%3D%22800%22%20font-size%3D%2226%22%20fill%3D%22%23fff%22%20letter-spacing%3D%222%22%3EALDI%3C/text%3E%3C/svg%3E'; BR.aldi = 'Aldi';
   CH.alim = ['Alimerka','#E2001A']; LOGOS.alim = 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20120%2048%22%3E%3Crect%20width%3D%22120%22%20height%3D%2248%22%20rx%3D%228%22%20fill%3D%22%23E2001A%22/%3E%3Ctext%20x%3D%2260%22%20y%3D%2231%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-weight%3D%22700%22%20font-size%3D%2221%22%20fill%3D%22%23fff%22%3Ealimerka%3C/text%3E%3C/svg%3E'; BR.alim = 'Alimerka';
-  var HAS = {merc:1, dia:1, carr:1, lidl:1, alim:1};
-  var CHAINS = ['merc','lidl','carr','dia','alim'];
+  var HAS = {merc:1, dia:1, carr:1, lidl:1, alim:1, aldi:1};
+  var CHAINS = ['merc','lidl','carr','dia','aldi','alim'];
   var OWNRX = {
     merc:/hacendado|compy|deliplus|bosque verde|delikuit|listo para comer|\+prote[ií]nas/i,
+    aldi:/milsani|gutbio|special|moser roth|nur nur|lacura|mamia|tandil|ocean sea|\baldi\b|le gusto|mini chef|nobile|sweet valley|casa morando|golden power|choceur|bellarom|las cuarenta|tastetime|everyday|kania|lyttos|cucina|mccarthy|beautiful|primasol|wellness/i,
     alim:/alimerka/i,
     dia:/\bdia\b|vegecampo|bonte/i,
     carr:/carrefour|el mercado|c[ií]rculo de calidad/i,
