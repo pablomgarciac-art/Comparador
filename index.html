@@ -480,6 +480,23 @@ body.lock{overflow:hidden}
   .sheet,#sheet .sh{max-width:760px}
 }
 @media (min-width:1300px){ .grid.deals{grid-template-columns:repeat(4,minmax(0,1fr))} }
+/* v21: portada móvil más limpia */
+.tile{background:#fff!important;border:1px solid var(--line)!important;box-shadow:none!important;color:var(--ink)}
+.tile:active{background:#F1F5F2!important}
+.tile .ti{width:52px;height:52px;border-radius:50%;background:#E8F4EC;color:var(--brand);display:grid;place-items:center}
+.tile svg{width:34px;height:34px;filter:none}
+.tile{gap:7px;font-weight:600;font-size:13px}
+.recent{max-height:86px;overflow:hidden}
+@media (max-width:899px){
+  .grid.deals{display:flex;grid-template-columns:none;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin-right:calc(var(--pad) * -1);padding:0 var(--pad) 6px 0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .grid.deals::-webkit-scrollbar{display:none}
+  .grid.deals .card{flex:0 0 46%;scroll-snap-align:start}
+}
+#s-app{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+#s-app .wrap{flex:1;display:flex;flex-direction:column;width:100%;padding-bottom:36px}
+#s-app .datanote{margin-top:44px}
+#s-app .foot{margin-top:auto;padding-top:56px}
+#s-app .datanote:empty{display:none}
 
 </style>
 </head>
@@ -622,23 +639,23 @@ body.lock{overflow:hidden}
   };
   var UL2 = {kg:'€/kg', l:'€/L', ud:'€/ud'};
   var IC = {
-    leche:'<path d="M14 14l6-8h12l4 8z" fill="#BFD9FF"/><rect x="14" y="14" width="22" height="28" rx="2" fill="#fff" stroke="#3B82F6" stroke-width="2"/><rect x="14" y="22" width="22" height="10" fill="#3B82F6"/><circle cx="25" cy="27" r="3" fill="#fff"/>',
-    yogur:'<path d="M12 17h24l-3 25H15z" fill="#FF8FB1" stroke="#E0517F" stroke-width="2" stroke-linejoin="round"/><rect x="10" y="11" width="28" height="7" rx="2" fill="#fff" stroke="#D1D5DB" stroke-width="2"/><circle cx="24" cy="29" r="5" fill="#fff"/><circle cx="24" cy="29" r="2.4" fill="#E0517F"/>',
-    huevos:'<path d="M24 5c8 0 14 11 14 20a14 14 0 0 1-28 0c0-9 6-20 14-20z" fill="#FBE7C0" stroke="#D9A441" stroke-width="2"/><path d="M17 20c1-4 3-7 6-9" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/>',
-    aceite:'<rect x="20" y="4" width="8" height="9" rx="2" fill="#6B8E23"/><path d="M17 13h14l3 8v19a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3V21z" fill="#C5D86D" stroke="#6B8E23" stroke-width="2" stroke-linejoin="round"/><rect x="17" y="25" width="14" height="10" rx="2" fill="#fff"/><ellipse cx="24" cy="30" rx="3" ry="2.4" fill="#6B8E23"/>',
-    arroz:'<path d="M9 22c2-11 28-11 30 0z" fill="#FFFBEF" stroke="#E0CFA0" stroke-width="2"/><path d="M6 22h36a18 18 0 0 1-36 0z" fill="#fff" stroke="#9CA3AF" stroke-width="2"/><path d="M9 29h30" stroke="#E11D48" stroke-width="3"/>',
-    pasta:'<circle cx="24" cy="26" r="16" fill="#fff" stroke="#D1D5DB" stroke-width="2"/><path d="M12 25c4-9 20-9 24 0M13 30c5-6 17-6 22 0M16 35c4-4 12-4 16 0" stroke="#F4B942" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="24" cy="23" r="4.2" fill="#E5484D"/>',
-    cafe:'<path d="M9 20h26v10a11 11 0 0 1-11 11h-4A11 11 0 0 1 9 30z" fill="#fff" stroke="#6B4226" stroke-width="2"/><path d="M35 23h2.5a4.5 4.5 0 0 1 0 9H34" fill="none" stroke="#6B4226" stroke-width="2.4"/><ellipse cx="22" cy="21" rx="11" ry="2.4" fill="#6B4226"/><path d="M16 14c-2-3 2-4 0-7M24 14c-2-3 2-4 0-7M31 14c-2-3 2-4 0-7" stroke="#A7B0BA" stroke-width="2" fill="none" stroke-linecap="round"/>',
-    galletas:'<circle cx="24" cy="25" r="17" fill="#E3A857" stroke="#B9782E" stroke-width="2"/><g fill="#6B3E16"><circle cx="17" cy="19" r="2.4"/><circle cx="29" cy="17" r="2.2"/><circle cx="31" cy="28" r="2.5"/><circle cx="19" cy="31" r="2.3"/><circle cx="25" cy="24" r="2"/></g>',
-    pan:'<path d="M10 22a8 8 0 0 1 6-14h16a8 8 0 0 1 6 14v17a3 3 0 0 1-3 3H13a3 3 0 0 1-3-3z" fill="#E9B872" stroke="#B9782E" stroke-width="2"/><path d="M15 21h18v17H15z" fill="#FFEBC8"/>',
-    cola:'<rect x="13" y="7" width="22" height="35" rx="5" fill="#E11D48"/><rect x="13" y="7" width="22" height="5" rx="2" fill="#CBD5E1"/><path d="M13 25c6-5 10 5 22 0v7c-12 5-16-5-22 0z" fill="#fff"/>',
-    agua:'<rect x="20" y="4" width="8" height="6" rx="1.5" fill="#2563EB"/><path d="M18 10h12l2 8v22a3 3 0 0 1-3 3H19a3 3 0 0 1-3-3V18z" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2" stroke-linejoin="round"/><path d="M16 27c4 3 12-3 16 0" stroke="#3B82F6" stroke-width="2.2" fill="none"/>',
-    cerveza:'<rect x="9" y="15" width="24" height="26" rx="3" fill="#F6B73C" stroke="#C47F0A" stroke-width="2"/><path d="M33 20h4a4 4 0 0 1 4 4v5a4 4 0 0 1-4 4h-4" fill="none" stroke="#C47F0A" stroke-width="3"/><path d="M8 15a5 5 0 0 1 4-7 5 5 0 0 1 8-2 5 5 0 0 1 8 2 5 5 0 0 1 6 7z" fill="#fff" stroke="#E5E7EB" stroke-width="2"/>',
-    queso:'<path d="M5 31L43 14v22H5z" fill="#FFC83D" stroke="#D69A00" stroke-width="2" stroke-linejoin="round"/><g fill="#E8A800"><circle cx="17" cy="31" r="2.8"/><circle cx="29" cy="28" r="2.2"/><circle cx="35" cy="31" r="3"/></g>',
-    atun:'<path d="M8 14v19c0 3 7 6 16 6s16-3 16-6V14z" fill="#3B82F6"/><ellipse cx="24" cy="14" rx="16" ry="5.5" fill="#CBD5E1" stroke="#94A3B8" stroke-width="2"/><path d="M15 28c4-6 10-6 14 0-4 6-10 6-14 0z" fill="#fff"/><path d="M29 28l5-4v8z" fill="#fff"/>',
-    cacao:'<rect x="10" y="7" width="28" height="34" rx="3" fill="#7B4A2A"/><path d="M10 19h28M10 30h28M19 7v34M29 7v34" stroke="#5B3219" stroke-width="2"/><rect x="10" y="7" width="28" height="8" rx="3" fill="#CBD5E1"/>'
+    leche:'<path d="M15 18l4-8h10l4 8"/><rect x="15" y="18" width="18" height="22" rx="2"/><path d="M15 26h18"/>',
+    yogur:'<path d="M13 17h22l-3 23H16z"/><path d="M11 17h26"/><path d="M14.5 26h19"/>',
+    huevos:'<path d="M24 8c-7 0-12 10-12 18a12 12 0 0 0 24 0c0-8-5-18-12-18z"/><path d="M17 29a7 7 0 0 0 5 5"/>',
+    aceite:'<path d="M20 8h8v6l4 6v18a2 2 0 0 1-2 2H18a2 2 0 0 1-2-2V20l4-6z"/><path d="M16 28h16"/>',
+    arroz:'<path d="M8 25h32a16 14 0 0 1-32 0z"/><path d="M17 19c0-3 2-4 2-7M25 19c0-3 2-4 2-7M33 19c0-3 2-4 2-7"/>',
+    pasta:'<circle cx="24" cy="26" r="13"/><path d="M24 13c-7 5-7 21 0 26M17 16c7 5 7 15 0 20M31 16c-7 5-7 15 0 20"/>',
+    cafe:'<path d="M10 19h24v11a10 10 0 0 1-10 10h-4a10 10 0 0 1-10-10z"/><path d="M34 23h3a4 4 0 0 1 0 8h-3"/><path d="M16 8c0 3 2 3 2 7M24 8c0 3 2 3 2 7"/>',
+    galletas:'<circle cx="24" cy="24" r="15"/><g fill="currentColor" stroke="none"><circle cx="18.500" cy="19" r="1.800"/><circle cx="29" cy="21" r="1.800"/><circle cx="22" cy="30" r="1.800"/><circle cx="31" cy="31" r="1.800"/></g>',
+    pan:'<path d="M11 25a13 10 0 0 1 26 0v14H11z"/><path d="M19 22l2 7M27 22l2 7"/>',
+    cola:'<rect x="15" y="9" width="18" height="30" rx="4"/><path d="M15 17h18M15 31h18"/>',
+    agua:'<path d="M24 8c8 10 12 15 12 22a12 12 0 0 1-24 0c0-7 4-12 12-22z"/><path d="M17 31a7 7 0 0 0 5 6"/>',
+    cerveza:'<path d="M12 16h20v22H12z"/><path d="M32 20h4a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3h-4"/><path d="M12 16a4 4 0 0 1 4-5h12a4 4 0 0 1 4 5"/><path d="M19 22v10M25 22v10"/>',
+    queso:'<path d="M8 20l32-8v24H8z"/><circle cx="18" cy="29" r="2.200"/><circle cx="30" cy="24" r="2.200"/>',
+    atun:'<path d="M8 24c6-8 16-8 22 0-6 8-16 8-22 0z"/><path d="M30 24l10-7v14z"/><circle cx="16" cy="22" r="1.300"/>',
+    cacao:'<rect x="12" y="10" width="24" height="28" rx="3"/><path d="M12 19h24M12 29h24M24 10v28"/>'
   };
-  function icon(k){ return '<svg viewBox="0 0 48 48" width="44" height="44" aria-hidden="true">'+IC[k]+'</svg>'; }
+  function icon(k){ return '<svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[k]+'</svg>'; }
   var TILES = [['leche','Leche','Leche','#E3F0FF'],['yogur','Yogur','Yogur','#FFE4EC'],['huevos','Huevos','Huevos','#FFF1D6'],['aceite','Aceite','Aceite de oliva','#EAF3CF'],['arroz','Arroz','Arroz','#F3F0E6'],['pasta','Pasta','Espaguetis','#FFEFC9'],['cafe','Café','Café','#F1E6DD'],['galletas','Galletas','Galletas','#FCE8C8'],['pan','Pan','Pan de molde','#FBEBD3'],['cola','Cola','Cola','#FFE0E5'],['agua','Agua','Agua mineral','#E0F0FF'],['cerveza','Cerveza','Cerveza','#FFF0C7'],['queso','Queso','Queso','#FFF4BF'],['atun','Atún','Atún','#E2ECFF'],['cacao','Chocolate','Cacao','#EBDCD2']];
   var PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
   var TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
