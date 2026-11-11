@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Cestuki · Compra mejor. Paga menos.</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20class=%22mark%22%20viewBox=%220%200%2048%2048%22%20aria-hidden=%22true%22%3E%3Crect%20width=%2248%22%20height=%2248%22%20rx=%2212%22%20fill=%22%230B7A47%22/%3E%3Cpath%20d=%22M8%2013h5l4.5%2017h17l4-12H16%22%20fill=%22none%22%20stroke=%22%23fff%22%20stroke-width=%223.2%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3Ccircle%20cx=%2220%22%20cy=%2237%22%20r=%222.8%22%20fill=%22%23fff%22/%3E%3Ccircle%20cx=%2233%22%20cy=%2237%22%20r=%222.8%22%20fill=%22%23fff%22/%3E%3Cpath%20d=%22M21%2022l3%203%206-6%22%20fill=%22none%22%20stroke=%22%23FFD84D%22%20stroke-width=%223%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3C/svg%3E">
-<meta name="description" content="Cestuki: compra mejor, paga menos. Compara precios reales de Mercadona, Dia, Carrefour y Lidl.">
+<meta name="description" content="Cestuki: compra mejor, paga menos. Compara precios reales de Mercadona, Dia, Carrefour, Lidl y Alimerka.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Inter:wght@400;500;600;700&family=Caveat:wght@500;700&display=swap">
 <style>
 
@@ -440,6 +440,11 @@ body.lock{overflow:hidden}
 .gearbtn:active{background:var(--line)}
 .setchips{display:grid;grid-template-columns:1fr 1fr}
 .setchips .chip{justify-content:center;width:100%}
+/* v17 */
+.pg-h.plain{font:700 13px/1.2 var(--f-body);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--ink2);padding:4px 0 2px}
+.pg-h.plain .pg-s{font-size:15px;font-family:var(--f-body);color:var(--ink2)}
+.backpill{display:inline-flex;align-items:center;gap:4px;border:0;border-radius:999px;background:var(--brand);color:#fff;font:700 16px var(--f-body);min-height:44px;padding:0 18px 0 10px;box-shadow:0 3px 0 var(--brand-2,#065233)}
+.backpill:active{transform:translateY(2px);box-shadow:0 1px 0 var(--brand-2,#065233)}
 
 </style>
 </head>
@@ -493,13 +498,13 @@ body.lock{overflow:hidden}
     <p class="count" id="count" aria-live="polite"></p>
     <div id="list"></div>
     <p class="datanote" id="datanote"></p>
-    <p class="foot">Precios y fotos tomados de las webs de Mercadona, Dia, Carrefour y Lidl a través del proyecto abierto <a href="https://github.com/elopositor/easycompra" target="_blank" rel="noopener">EasyCompra</a> (licencia MIT). Son precios de la tienda online: pueden cambiar según tu tienda o código postal. Logos y fotos pertenecen a sus empresas y se usan solo para identificar productos.</p>
+    <p class="foot">Precios y fotos tomados de las webs de Mercadona, Dia, Carrefour, Lidl y Alimerka a través del proyecto abierto <a href="https://github.com/elopositor/easycompra" target="_blank" rel="noopener">EasyCompra</a> (licencia MIT). Son precios de la tienda online: pueden cambiar según tu tienda o código postal. Logos y fotos pertenecen a sus empresas y se usan solo para identificar productos.</p>
   </div>
 </div>
 
 <main id="s-set" hidden>
   <div class="bar"><div class="barin">
-    <button class="back" type="button" id="set-back" style="padding:8px 0">← Volver</button>
+    <button class="backpill" type="button" id="set-back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Volver</button>
     <div class="mini"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#0B7A47"/><path d="M8 13h5l4.5 17h17l4-12H16" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="37" r="2.8" fill="#fff"/><circle cx="33" cy="37" r="2.8" fill="#fff"/><path d="M21 22l3 3 6-6" fill="none" stroke="#FFD84D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Cestuki</span></div>
   </div></div>
   <div class="lst">
@@ -568,10 +573,12 @@ body.lock{overflow:hidden}
 
 
 
-  var HAS = {merc:1, dia:1, carr:1, lidl:1};
-  var CHAINS = ['merc','lidl','carr','dia'];
+  CH.alim = ['Alimerka','#E2001A']; LOGOS.alim = 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20120%2048%22%3E%3Crect%20width%3D%22120%22%20height%3D%2248%22%20rx%3D%228%22%20fill%3D%22%23E2001A%22/%3E%3Ctext%20x%3D%2260%22%20y%3D%2231%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-weight%3D%22700%22%20font-size%3D%2221%22%20fill%3D%22%23fff%22%3Ealimerka%3C/text%3E%3C/svg%3E'; BR.alim = 'Alimerka';
+  var HAS = {merc:1, dia:1, carr:1, lidl:1, alim:1};
+  var CHAINS = ['merc','lidl','carr','dia','alim'];
   var OWNRX = {
     merc:/hacendado|compy|deliplus|bosque verde|delikuit|listo para comer|\+prote[ií]nas/i,
+    alim:/alimerka/i,
     dia:/\bdia\b|vegecampo|bonte/i,
     carr:/carrefour|el mercado|c[ií]rculo de calidad/i,
     lidl:/lidl|milbona|realvalle|chef select|\bcien\b|freeway|alesto|ocean sea|manifiesto|dulano|pilos|combino|crownfield|sondey|vitasia|bellarom|primadonna|deluxe|gelatelli|max & mila/i
@@ -859,7 +866,7 @@ body.lock{overflow:hidden}
       var items = LIST.filter(function(x){ return x.c === k; });
       items.sort(function(a,b){ return (a.done?1:0) - (b.done?1:0); });
       var sub = items.reduce(function(a,x){ var p = priceOf(x); return a + (p == null ? 0 : p * x.qty); },0);
-      h += '<section class="pg"><div class="pg-h"><span>'+(k ? esc(CH[k][0]) : 'Productos')+'</span><span class="pg-s">'+(sub ? nf.format(sub)+' €' : '')+'</span></div>';
+      h += '<section class="pg"><div class="pg-h'+(k ? '' : ' plain')+'"><span>'+(k ? esc(CH[k][0]) : 'Productos')+'</span><span class="pg-s">'+(sub ? nf.format(sub)+' €' : '')+'</span></div>';
       items.forEach(function(x){
         var i = LIST.indexOf(x), p = priceOf(x);
         h += '<div class="ln'+(x.done?' done':'')+'" data-i="'+i+'"><div class="ln-main">'
@@ -1104,7 +1111,7 @@ body.lock{overflow:hidden}
   }
 
   /* ---------- Inicio ---------- */
-  $('introchains').insertAdjacentHTML('beforeend', ['merc','lidl','carr','dia'].map(function(k){ return chainTag(k); }).join(''));
+  $('introchains').insertAdjacentHTML('beforeend', CHAINS.map(function(k){ return chainTag(k); }).join(''));
   saveList(); saveFav();
   $('q').value = '';
   render(); updateBadge();

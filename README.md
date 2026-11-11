@@ -14,7 +14,7 @@ Comparador de precios de supermercados con foto. Abres la app, buscas un product
 
 ## Datos
 
-- Precios y fotos reales de Mercadona, Dia, Carrefour y Lidl (más de 5.000 productos) en `productos.js`, con la fecha de la copia. La app avisa si tienen 3 días o más.
+- Precios y fotos reales de Mercadona, Dia, Carrefour, Lidl y Alimerka (más de 5.000 productos) en `productos.js`, con la fecha de la copia. La app avisa si tienen 3 días o más.
 - Son precios de la tienda online: pueden variar según tu tienda o código postal.
 - Cobertura desigual: Carrefour y Dia traen solo parte de su catálogo.
 - Las fotos se cargan desde las webs de cada cadena; si alguna las bloquea, la ficha muestra «Sin foto».
@@ -37,5 +37,5 @@ Desde la dirección `https`: en Android, botón «Instalar la app» o menú del 
 
 ## Créditos y licencias
 
-- Datos de precios y fotos: proyecto abierto [EasyCompra](https://github.com/elopositor/easycompra) (licencia MIT), que lee las webs de Mercadona, Dia, Carrefour y Lidl. Revisa los términos de uso de cada cadena antes de un uso comercial: las fotos y los datos son suyos.
+- Datos de precios y fotos: proyecto abierto [EasyCompra](https://github.com/elopositor/easycompra) (licencia MIT), que lee las webs de Mercadona, Dia, Carrefour, Lidl y Alimerka. Revisa los términos de uso de cada cadena antes de un uso comercial: las fotos y los datos son suyos.
 - Logos: marcas de sus respectivas empresas, usadas solo para identificar cada cadena.
