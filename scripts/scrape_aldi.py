@@ -64,7 +64,7 @@ def productos(parse_qty=None):
             foto = ''
             for a in p.get('assets') or []:
                 if a.get('type') == 'primary' and a.get('url'):
-                    foto = a['url'].replace('http://', 'https://') + '?wid=200&fmt=jpeg&qlt=80'; break
+                    foto = a['url'].replace('http://', 'https://') + '?wid=200&hei=200&fit=constrain&fmt=jpeg&qlt=80'; break
             ref = unit = None
             for b in c.get('basePrice') or []:
                 s = (b.get('basePriceScale') or '').lower()
