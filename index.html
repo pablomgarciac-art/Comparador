@@ -832,7 +832,11 @@ body.lock{overflow:hidden}
     return ITEMS.filter(function(it){ return it.was && it.was > it.price * 1.05 && S.sel[it.c]; })
       .map(function(it){ return {it:it, pct:1 - it.price / it.was}; })
       .sort(function(a,b){ return b.pct - a.pct || (b.it.was - b.it.price) - (a.it.was - a.it.price); })
-      .slice(0,4).map(function(x){ return x.it; });
+      .reduce(function(acc,x){
+        var n = acc.filter(function(y){ return y.c === x.it.c; }).length;
+        if(acc.length < 4 && n < 2) acc.push(x.it);
+        return acc;
+      }, []);
   }
   function render(){
     var list = $('list'), has = tokens(S.q).length > 0;
