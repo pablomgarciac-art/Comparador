@@ -65,6 +65,7 @@ def productos(parse_qty=None):
             for a in p.get('assets') or []:
                 if a.get('type') == 'primary' and a.get('url'):
                     foto = a['url'].replace('http://', 'https://') + '?wid=200&hei=200&fit=constrain&fmt=jpeg&qlt=80'; break
+            was = ((c.get('strikePrice') or {}).get('strikePriceValue'))
             ref = unit = None
             for b in c.get('basePrice') or []:
                 s = (b.get('basePriceScale') or '').lower()
@@ -77,7 +78,8 @@ def productos(parse_qty=None):
                     if 0.05 <= r <= 500: unit, ref = q[0], r
             vistos.add(slug)
             filas.append(['aldi', name, brand, foto, round(price, 2), round(ref, 2) if ref is not None else None, unit,
-                          'https://www.aldi.es/producto/' + slug + '.html'])
+                          'https://www.aldi.es/producto/' + slug + '.html',
+                          round(float(was), 2) if was and float(was) > price else None])
     return filas
 
 if __name__ == '__main__':
