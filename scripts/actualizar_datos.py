@@ -54,6 +54,15 @@ def ref_unit(price,ref,fmt,name):
     if m and 2<=int(m.group(1))<=60: return 'ud',price/int(m.group(1))
     return None,None
 
+# Precios anteriores (ofertas) de Mercadona; si falla, se sigue sin ellos
+OFERTAS={}
+try:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import ofertas_mercadona
+    OFERTAS=ofertas_mercadona.ofertas()
+    print('ofertas mercadona', len(OFERTAS))
+except Exception as e:
+    print('Mercadona ofertas: no se pudo leer (%s)' % e)
 rows=[]; stats={}
 for key,fn in CHAINS:
     d=fetch(fn+'.json')
@@ -71,7 +80,10 @@ for key,fn in CHAINS:
         url=x.get('share_url') or ''
         if not url.startswith('https://'): url=''
         u,r=ref_unit(p,x.get('reference_price'),x.get('reference_format'),name)
-        rows.append([key,name,brand,photo,round(p,2),round(r,2) if r is not None else None,u,url])
+        fila=[key,name,brand,photo,round(p,2),round(r,2) if r is not None else None,u,url]
+        was=OFERTAS.get(str(eid)) if key=='merc' else None
+        if was and was>p: fila.append(was)
+        rows.append(fila)
         n+=1; withu+= 1 if u else 0
     stats[key]=(n,withu)
 for k,(n,w) in stats.items():
