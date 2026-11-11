@@ -1,0 +1,33 @@
+name: Actualizar precios
+
+on:
+  schedule:
+    - cron: '30 16 * * *'   # cada dia, despues de que EasyCompra publique sus datos
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Descargar y convertir precios
+        run: python3 scripts/actualizar_datos.py
+      - name: Subir cambios si los hay
+        run: |
+          if git diff --quiet productos.js; then
+            echo "Sin cambios"; exit 0
+          fi
+          # nueva version de la cache de la app para que el movil recoja los datos
+          n=$(grep -o "cestuki-v[0-9]*" sw.js | head -1 | grep -o "[0-9]*$")
+          sed -i "s/cestuki-v$n/cestuki-v$((n+1))/" sw.js
+          git config user.name "cestuki-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add productos.js sw.js
+          git commit -m "Precios actualizados $(date -u +%F)"
+          git push
