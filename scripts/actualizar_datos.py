@@ -55,7 +55,7 @@ def ref_unit(price,ref,fmt,name):
     return None,None
 
 # Precios anteriores (ofertas) de Mercadona; si falla, se sigue sin ellos
-OFERTAS={}
+OFERTAS={}; OFERTAS_X={}
 try:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import ofertas_mercadona
@@ -63,6 +63,15 @@ try:
     print('ofertas mercadona', len(OFERTAS))
 except Exception as e:
     print('Mercadona ofertas: no se pudo leer (%s)' % e)
+try:
+    import ofertas_extra
+    for k, f in (('lidl', ofertas_extra.lidl), ('alim', ofertas_extra.alimerka)):
+        try:
+            OFERTAS_X[k] = f()
+        except Exception as e:
+            print('%s ofertas: no se pudo leer (%s)' % (k, e))
+except Exception as e:
+    print('ofertas extra: %s' % e)
 rows=[]; stats={}
 for key,fn in CHAINS:
     d=fetch(fn+'.json')
@@ -81,7 +90,7 @@ for key,fn in CHAINS:
         if not url.startswith('https://'): url=''
         u,r=ref_unit(p,x.get('reference_price'),x.get('reference_format'),name)
         fila=[key,name,brand,photo,round(p,2),round(r,2) if r is not None else None,u,url]
-        was=OFERTAS.get(str(eid)) if key=='merc' else None
+        was=(OFERTAS if key=='merc' else OFERTAS_X.get(key,{})).get(str(eid))
         if was and was>p: fila.append(was)
         rows.append(fila)
         n+=1; withu+= 1 if u else 0
