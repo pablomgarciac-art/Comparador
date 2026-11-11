@@ -497,6 +497,23 @@ body.lock{overflow:hidden}
 #s-app .datanote{margin-top:44px}
 #s-app .foot{margin-top:auto;padding-top:56px}
 #s-app .datanote:empty{display:none}
+/* v22 */
+.search input{border:1.5px solid #D3DDD6;border-radius:20px;min-height:60px;font-size:18px;padding-left:52px;box-shadow:0 3px 12px rgba(11,122,71,.08),0 1px 2px rgba(0,0,0,.04)}
+.search input:focus{border-color:var(--brand);box-shadow:0 0 0 4px rgba(18,161,99,.16),0 3px 12px rgba(11,122,71,.1)}
+.search input::placeholder{color:var(--muted);opacity:.85}
+.search svg{color:var(--brand);width:24px;height:24px;left:17px}
+.count:empty,.stale[hidden],#s-app .stale:empty{display:none;margin:0}
+.count{margin-top:12px}
+#list>.h2s:first-child{margin-top:16px}
+.tile{min-height:118px;padding:12px 3px 10px;gap:9px;font-size:15px;font-weight:700}
+.tile .ti{width:60px;height:60px}
+.tile svg{width:40px;height:40px}
+.sh-ph .chainlogo{left:10px;top:10px}
+.sh-ph .chainlogo .logo{width:128px;height:46px;padding:5px 10px;border-radius:9px}
+#s-list .mini,#s-set .mini{font-size:32px;gap:12px}
+#s-list .mini .mark,#s-set .mini .mark{width:50px;height:50px}
+#s-list .bar,#s-set .bar{padding-top:max(22px,env(safe-area-inset-top));padding-bottom:20px}
+@media (min-width:900px){ .tile{flex:0 0 140px;min-height:124px} }
 
 </style>
 </head>
