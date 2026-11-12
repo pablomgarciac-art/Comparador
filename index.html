@@ -896,7 +896,7 @@ body.lock{overflow:hidden}
   function dietOn(){ return dietMask() !== 0; }
   function dietOk(it){ var m = dietMask(); return (it.diet & m) === m; }
   function baseList(){
-    return matches(S.q).filter(function(it){
+    return (tokens(S.q).length ? matches(S.q) : ITEMS).filter(function(it){
       if(!S.sel[it.c]) return false;
       if(!dietOk(it)) return false;
       if(S.type === 'own') return it.own === true;
@@ -954,9 +954,9 @@ body.lock{overflow:hidden}
       }, []);
   }
   function render(){
-    var list = $('list'), has = tokens(S.q).length > 0;
+    var list = $('list'), hasQ = tokens(S.q).length > 0, has = hasQ || dietOn();
     $('qclear').hidden = !S.q;
-    $('summary').hidden = !has && !dietOn(); if(has || dietOn()) $('sum-t').textContent = summaryText();
+    $('summary').hidden = !has; if(has) $('sum-t').textContent = summaryText();
     if(!DATA){ $('count').textContent = ''; list.innerHTML = '<div class="empty"><b>No se han podido cargar los precios</b>Falta el fichero productos.js junto a index.html.</div>'; return; }
     if(!has){
       $('count').textContent = '';
@@ -996,7 +996,7 @@ body.lock{overflow:hidden}
     }
     var chains = {}; rows.forEach(function(it){ chains[it.c] = 1; });
     var nc = Object.keys(chains).length;
-    $('count').textContent = rows.length + (rows.length===1?' producto':' productos') + ' en ' + nc + (nc===1?' súper':' súpers') + ' para «' + S.q.trim() + '»';
+    $('count').textContent = rows.length + (rows.length===1?' producto':' productos') + ' en ' + nc + (nc===1?' súper':' súpers') + (hasQ ? ' para «' + S.q.trim() + '»' : ' con tu dieta');
     var shown = rows.slice(0, S.shown); S.rows = shown;
     var html = '<div class="grid">' + shown.map(function(it,i){ return cardHTML(it,best,i); }).join('') + '</div>';
     if(rows.length > shown.length) html += '<button type="button" class="more" id="more">Ver más (' + (rows.length - shown.length) + ' más)</button>';
