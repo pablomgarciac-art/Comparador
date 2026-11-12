@@ -6,6 +6,11 @@ Comparador de precios de supermercados con foto. Abres la app, buscas un product
 
 ## Qué hace
 
+- **Comparador de cestas** (Mi lista → Comparar): cuánto cuesta toda tu lista en cada súper, con equivalentes cuando falta un producto y botón para pasar la lista a ese súper.
+- **Alternativas más baratas** en la ficha de cada producto.
+- **Filtros de dieta** (sin gluten, sin lactosa, vegano, ecológico, integral, sin azúcar) deducidos del nombre del producto.
+- **Enviar la lista por WhatsApp** con un toque.
+
 - **Búsqueda** con atajos (leche, yogur, huevos…) y tus últimas búsquedas. Al abrir la app no hay ninguna búsqueda hecha.
 - **Ficha de producto**: toca un producto y ves foto grande, precio, precio por kg/litro, formato y enlace a la tienda.
 - **Mi lista de la compra**: añade productos con «+ Añadir», apunta cosas a mano, marca lo que ya has cogido (se tacha), cambia cantidades, añade notas, agrupa por súper y suma el total. Avisa si un precio ha subido o bajado, ofrece «Ver alternativas», permite deshacer, desmarcar todo para reutilizar y compartir la lista.
