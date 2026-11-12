@@ -1006,6 +1006,10 @@ body.lock{overflow:hidden}
   function thumb(x,attr){
     return '<div class="th'+(x.photo?'':' cus')+'" '+attr+'>'+(x.photo ? '<img src="'+esc(x.photo)+'" alt="" loading="lazy" referrerpolicy="no-referrer" data-ph="1">' : (x.c ? '' : '✎'))+'</div>';
   }
+  function shortName(n){
+    var r = String(n).replace(/\(?\s*(\d+\s*[x×]\s*)?\d+(?:[.,]\d+)?\s*(kg|g|gr|l|cl|ml|uds?|unidades)\b\.?\s*\)?/ig,' ').replace(/\bpack\s*\d+\b/ig,' ').replace(/\s+/g,' ').replace(/[\s.,\-–(]+$/,'').trim();
+    return r.length > 2 ? r : n;
+  }
   function chgHTML(x){
     if(x.gone) return '<span class="gone">Ya no aparece en la tienda online</span>';
     if(x.price != null && x.now != null && Math.abs(x.now - x.price) > 0.004){
@@ -1040,7 +1044,7 @@ body.lock{overflow:hidden}
         var i = LIST.indexOf(x), p = priceOf(x);
         h += '<div class="ln'+(x.done?' done':'')+'" data-i="'+i+'"><div class="ln-main">'
           + '<button type="button" class="box" data-chk="'+i+'" aria-pressed="'+(!!x.done)+'" aria-label="'+(x.done?'Ya cogido':'Por coger')+': '+esc(x.name)+'">'+BOX+'</button>'
-          + '<div class="ln-tx"'+(x.c ? ' data-open="'+i+'"' : '')+'><span class="w'+(x.c ? '' : ' cus')+'">'+esc(x.name)+'</span>'
+          + '<div class="ln-tx"'+(x.c ? ' data-open="'+i+'"' : '')+'><span class="w'+(x.c ? '' : ' cus')+'">'+esc(shortName(x.name))+'</span>'
           + '<span class="sub2">'+(p != null ? '<span class="pz">'+nf.format(p*x.qty)+' €</span>' : '')
           + '<span class="qty2"><button type="button" data-q="-1" data-i="'+i+'" aria-label="Quitar una unidad">−</button><span>'+x.qty+'</span><button type="button" data-q="1" data-i="'+i+'" aria-label="Añadir una unidad">+</button></span>'
           + (x.c ? '<button type="button" class="altl" data-alt="'+i+'">alternativas</button>' : '')+'</span>'
@@ -1209,8 +1213,8 @@ body.lock{overflow:hidden}
         h += '<div class="cmpd">';
         r.lines.forEach(function(l,li){
           var x = l.x, f = l.f;
-          if(f && f.tier === 'own'){ h += '<div class="cl own"><div class="cl-b"><div class="cl-n">'+esc(x.name)+(x.qty > 1 ? ' <small>· ×'+x.qty+'</small>' : '')+'</div><b>'+nf.format(f.m.price * x.qty)+' €</b></div></div>'; return; }
-          h += '<div class="cl'+(f ? '' : ' none')+'"><div class="cl-a"><small>Tu lista'+(x.qty > 1 ? ' · ×'+x.qty : '')+'</small>'+esc(x.name)+'</div>';
+          if(f && f.tier === 'own'){ h += '<div class="cl own"><div class="cl-b"><div class="cl-n">'+esc(shortName(x.name))+(x.qty > 1 ? ' <small>· ×'+x.qty+'</small>' : '')+'</div><b>'+nf.format(f.m.price * x.qty)+' €</b></div></div>'; return; }
+          h += '<div class="cl'+(f ? '' : ' none')+'"><div class="cl-a"><small>Tu lista'+(x.qty > 1 ? ' · ×'+x.qty : '')+'</small>'+esc(shortName(x.name))+'</div>';
           if(f){
             h += '<div class="cl-b"'+(f.tier === 'own' ? '' : ' data-cx="'+ri+':'+li+'"')+'><div class="cl-n">'+(TAGS[f.tier] ? '<em class="tg '+f.tier+'">'+TAGS[f.tier]+'</em>' : '')+esc(f.m.name)+(f.tier !== 'own' && fmtOf(f.m) ? ' <small>· '+esc(fmtOf(f.m))+'</small>' : '')+'</div><b>'+nf.format(f.m.price * x.qty)+' €</b></div>';
           } else {
