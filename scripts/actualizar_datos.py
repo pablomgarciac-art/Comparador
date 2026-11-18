@@ -92,6 +92,10 @@ for key,fn in CHAINS:
         fila=[key,name,brand,photo,round(p,2),round(r,2) if r is not None else None,u,url]
         was=(OFERTAS if key=='merc' else OFERTAS_X.get(key,{})).get(str(eid))
         if was and was>p: fila.append(was)
+        ean=re.sub(r'\D','',str(x.get('ean') or ''))
+        if len(ean)>=8:
+            if len(fila)==8: fila.append(None)
+            fila.append(ean)
         rows.append(fila)
         n+=1; withu+= 1 if u else 0
     stats[key]=(n,withu)
